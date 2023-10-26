@@ -13,7 +13,6 @@ export class OtpService {
   }
 
   async createOtp(otpDetails: IOtp) {
-
     const otp = await this.otpRepository.findOtp(otpDetails.email);
     if( !otp ) {
       return this.otpRepository.createOtp(otpDetails);
@@ -33,7 +32,6 @@ export class OtpService {
       specialChars : false
     });
     console.log(generatedOtp);
-    
     return generatedOtp;
   }
 
@@ -49,7 +47,6 @@ export class OtpService {
         pass: process.env.USER_EMAIL_PASSWORD
       },
     });
-    
     transporter.sendMail({
       to: email,
       from: process.env.USER_EMAIL,
@@ -75,5 +72,19 @@ export class OtpService {
         </div>
       </div>`
     });
+  }
+
+  maskMail(email: string): string {
+    if (typeof email !== "string") {
+      return email;
+    }
+    const parts = email.split("@");
+    if (parts.length !== 2) {
+      return email;
+    }
+    const username = parts[0];
+    const domain = parts[1];
+    const maskedUsername = `${username.slice(0, 3)}*****${username.slice(-1)}`;
+    return `${maskedUsername}@${domain}`;
   }
 }

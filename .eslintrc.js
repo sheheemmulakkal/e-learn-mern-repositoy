@@ -23,7 +23,11 @@ module.exports = {
   rules: {
     indent: ["error", 2],
     semi: ["error", "always"],
-    quotes: ["error", "double", { avoidEscape: true }],
+    quotes: [
+      "error",
+      "double",
+      { avoidEscape: true, allowTemplateLiterals: true },
+    ],
     "max-len": [
       "error",
       {

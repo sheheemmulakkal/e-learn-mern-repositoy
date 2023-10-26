@@ -4,7 +4,6 @@ import { signupValidation } from "../middlewares/validations";
 import { validateRequest } from "../middlewares/validateRequest";
 
 const studentController = new StudentController();
-
 const router = Router();
 
 router.post(
@@ -21,6 +20,11 @@ router.post("/resend-otp",
 router.post(
   "/verify-otp",
   studentController.verifyStudent
+);
+
+router.post(
+  "/login",
+  studentController.login
 );
 
 export default router;

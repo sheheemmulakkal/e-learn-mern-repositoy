@@ -15,7 +15,6 @@ export class StudenRepository {
     const student = await Student.findOne({email});
     student!.set({ isVerified: true });
     const students = await student!.save();
-    
     return students;
     
   }

@@ -15,7 +15,7 @@ declare module "express" {
   }
 export const isStudentAuth = (req: Request, res: Response, next: NextFunction) => {
   if( !req.session?.jwt) {
-    throw new NotAuthorizedError();
+    throw new NotAuthorizedError("Not authorized");
   } else {
     if( !process.env.JWT_KEY) {
       throw new BadRequestError("Jwt key not found");
