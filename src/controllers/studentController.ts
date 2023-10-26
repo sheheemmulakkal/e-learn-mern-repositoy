@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { StudenRepository } from "../repositories/studentRepository";
-import { StudentService } from "../services/studentService";
-import { OtpRepository } from "../repositories/otpRepository";
-import { OtpService } from "../services/otpService";
+import { StudenRepository } from "../repositories/implements/studentRepository";
+import { StudentService } from "../services/implements/studentService";
+import { OtpRepository } from "../repositories/implements/otpRepository";
+import { OtpService } from "../services/implements/otpService";
 import { IStudent } from "../common/types/student";
 import { BadRequestError } from "../common/errors/badRequestError";
 import { ForbiddenError } from "../common/errors/forbiddenError";

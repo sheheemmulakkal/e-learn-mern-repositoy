@@ -1,7 +1,8 @@
-import { Otp } from "../models/otpModel";
-import { IOtp } from "../common/types/otp";
+import { Otp } from "../../models/otpModel";
+import { IOtp } from "../../common/types/otp";
+import { IOtpRepository } from "../interfaces/IOtpRepository";
 
-export class OtpRepository{
+export class OtpRepository implements IOtpRepository{
   async createOtp(otpDetails: IOtp): Promise<IOtp> {
     const otp = Otp.build(otpDetails);
     return await otp.save();

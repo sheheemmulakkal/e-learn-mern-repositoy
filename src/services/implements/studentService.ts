@@ -1,9 +1,10 @@
-import { StudenRepository } from "../repositories/studentRepository";
-import { IStudent } from "../common/types/student";
-import { BadRequestError } from "../common/errors/badRequestError";
-import { NotFoundError } from "../common/errors/notFoundError";
+import { StudenRepository } from "../../repositories/implements/studentRepository";
+import { IStudent } from "../../common/types/student";
+import { IStudentService } from "../interfaces/IStudentService";
+import { BadRequestError } from "../../common/errors/badRequestError";
+import { NotFoundError } from "../../common/errors/notFoundError";
 
-export class StudentService {
+export class StudentService implements IStudentService{
   private studentRepository: StudenRepository;
 
   constructor(studentRepository: StudenRepository) {
@@ -29,8 +30,8 @@ export class StudentService {
       return student;
     }
   }
-  
-  async verifyStudent(email: string) {
+
+  async verifyStudent(email: string): Promise<IStudent> {
     return await this.studentRepository.updateUserVerification(email);
   }
 }

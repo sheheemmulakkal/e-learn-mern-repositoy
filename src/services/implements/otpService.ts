@@ -1,18 +1,19 @@
 
-import { OtpRepository } from "../repositories/otpRepository";
+import { OtpRepository } from "../../repositories/implements/otpRepository";
+import { IOtpService} from "../interfaces/IOtpService";
 import otpGenerator from "otp-generator";
 import nodemailer from "nodemailer";
-import { IOtp } from "../common/types/otp";
+import { IOtp } from "../../common/types/otp";
 
 
 
-export class OtpService {
+export class OtpService implements IOtpService {
   private otpRepository: OtpRepository;
   constructor(otpRepository: OtpRepository) {
     this.otpRepository = otpRepository;
   }
 
-  async createOtp(otpDetails: IOtp) {
+  async createOtp(otpDetails: IOtp): Promise<IOtp | undefined> {
     const otp = await this.otpRepository.findOtp(otpDetails.email);
     if( !otp ) {
       return this.otpRepository.createOtp(otpDetails);
@@ -21,8 +22,8 @@ export class OtpService {
     }
   }
 
-  async findOtp(email: string) {
-    return this.otpRepository.findOtp(email);
+  async findOtp(email: string): Promise<IOtp | null> {
+    return await this.otpRepository.findOtp(email);
   }
 
   generateOtp(): string {
@@ -35,7 +36,7 @@ export class OtpService {
     return generatedOtp;
   }
 
-  async sendOtpVerificationEmail(email: string, otp: string) {
+  async sendOtpVerificationEmail(email: string, otp: string): Promise<void> {
 
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
