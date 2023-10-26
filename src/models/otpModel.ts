@@ -3,8 +3,6 @@ import { IOtp } from "../common/types/otp";
 
 const OTP_EXPIRY_TIME = 10;
 
-
-
 interface OtpModel extends Model<IOtp> {
     build(attrs: IOtp): OtpDoc
 }
