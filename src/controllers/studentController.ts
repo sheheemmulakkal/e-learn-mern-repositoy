@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcryptjs";
-// import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { StudenRepository } from "../repositories/studentRepository";
 import { StudentService } from "../services/studentService";
 import { OtpRepository } from "../repositories/otpRepository";
@@ -30,18 +30,6 @@ export class StudentController {
       const otp = otpService.generateOtp();
       await otpService.createOtp({email, otp});
       otpService.sendOtpVerificationEmail(email, otp);
-      // const studentJwt = jwt.sign(
-      //   {
-      //     studentId: student.id,
-      //     studentName: student.lastname,
-      //     studentEmail: student.email,
-      //   },
-      //   process.env.JWT_KEY!
-      // );
-
-      // req.session = {
-      //   studentToken: studentJwt,
-      // };
       res.status(201).send({ message: "OTP generated" });
     } catch (error) {
       if (error instanceof Error) {
@@ -65,7 +53,19 @@ export class StudentController {
     const { otp, email } = req.body;
     const savedOtp = await otpService.findOtp(email);
     if( otp === savedOtp?.otp) {
-      await studentService.verifyStudent(email);
+      const student: IStudent = await studentService.verifyStudent(email);
+      const studentJwt = jwt.sign(
+        {
+          studentId: student.id,
+          studentName: student.lastname,
+          studentEmail: student.email,
+        },
+        process.env.JWT_KEY!
+      );
+
+      req.session = {
+        studentToken: studentJwt,
+      };
       res.status(200).send({ message: "Student Verified" });
     } else {
       res.status(400).send({ message: "Otp Verification failed"});

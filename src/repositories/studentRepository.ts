@@ -14,7 +14,9 @@ export class StudenRepository {
   async updateUserVerification(email: string) {
     const student = await Student.findOne({email});
     student!.set({ isVerified: true });
-    return await student!.save();
+    const students = await student!.save();
+    
+    return students;
     
   }
 }
