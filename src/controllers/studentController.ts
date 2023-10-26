@@ -1,20 +1,16 @@
 import { NextFunction, Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { StudenRepository } from "../repositories/implements/studentRepository";
 import { StudentService } from "../services/implements/studentService";
-import { OtpRepository } from "../repositories/implements/otpRepository";
 import { OtpService } from "../services/implements/otpService";
 import { IStudent } from "../common/types/student";
 import { BadRequestError } from "../common/errors/badRequestError";
 import { ForbiddenError } from "../common/errors/forbiddenError";
 import { NotAuthorizedError } from "../common/errors/notAuthorizedError";
 
-const studentRepository = new StudenRepository();
-const studentService = new StudentService(studentRepository);
 
-const otpRepository = new OtpRepository();
-const otpService = new OtpService(otpRepository);
+const studentService = new StudentService();
+const otpService = new OtpService();
 
 export class StudentController {
   async signup(req: Request, res: Response, next: NextFunction): Promise<void> {

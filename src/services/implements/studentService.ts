@@ -7,8 +7,8 @@ import { NotFoundError } from "../../common/errors/notFoundError";
 export class StudentService implements IStudentService{
   private studentRepository: StudenRepository;
 
-  constructor(studentRepository: StudenRepository) {
-    this.studentRepository = studentRepository;
+  constructor() {
+    this.studentRepository = new StudenRepository();
   }
 
   async signup(studentDetails: IStudent): Promise<IStudent> {

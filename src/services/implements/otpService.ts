@@ -9,8 +9,8 @@ import { IOtp } from "../../common/types/otp";
 
 export class OtpService implements IOtpService {
   private otpRepository: OtpRepository;
-  constructor(otpRepository: OtpRepository) {
-    this.otpRepository = otpRepository;
+  constructor() {
+    this.otpRepository = new OtpRepository();
   }
 
   async createOtp(otpDetails: IOtp): Promise<IOtp | undefined> {
