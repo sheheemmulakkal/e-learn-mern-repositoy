@@ -45,7 +45,7 @@ const instructorSchema = new mongoose.Schema({
   },
   isBlocked: {
     type: Boolean,
-    defauld: false
+    default: false
   },
   isVerified: {
     type: Boolean,

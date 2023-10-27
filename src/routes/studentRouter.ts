@@ -27,8 +27,4 @@ router.post(
   studentController.login
 );
 
-router.get("/logout",
-  studentController.signout
-);
-
 export default router;

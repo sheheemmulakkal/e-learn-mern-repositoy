@@ -13,7 +13,6 @@ router.post("/signup",
 );
 router.post("/resend-otp", instructorController.resendOtp);
 router.post("/verify-otp", instructorController.VerifyInstructor);
-router.post("/login");
-router.post("/logout");
+router.post("/login", instructorController.login);
 
 export default router;

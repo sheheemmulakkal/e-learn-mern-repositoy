@@ -60,10 +60,7 @@ export class StudentController {
         },
         process.env.JWT_KEY!
       );
-      req.session = {
-        studentToken: studentJwt,
-      };
-      res.status(200).json({ message: "Student Verified" });
+      res.status(200).json({ message: "Student Verified" , studentToken: studentJwt});
     } else {
       res.status(400).json({ message: "Otp Verification failed"});
     }
@@ -76,7 +73,7 @@ export class StudentController {
       if( !student.isBlocked ) {
         const validPassword = await bcrypt.compare(password, student.password);
         if(validPassword) {
-          if( student.isVerified){
+          if(student.isVerified){
             const studentJwt = jwt.sign(
               {
                 studentId: student.id,
@@ -85,10 +82,7 @@ export class StudentController {
               },
               process.env.JWT_KEY!
             );
-            req.session = {
-              studentToken: studentJwt,
-            };
-            res.status(200).json({message: "Student signed in"});
+            res.status(200).json({message: "Student signed in", studentToken: studentJwt});
           } else {
             const otp = otpService.generateOtp();
             await otpService.createOtp({email, otp});
@@ -108,11 +102,6 @@ export class StudentController {
         return next(error);
       }
     }
-  }
-
-  signout(req: Request, res: Response) {
-    req.session = null;
-    res.status(200).json({message: "Student signed out"});
   }
 
 }

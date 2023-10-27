@@ -27,7 +27,7 @@ export class InstructorSerivce implements IInstructorService {
     }
   }
 
-  async verifyStudent(email: string): Promise<IInstructor> {
+  async verifyInstructor(email: string): Promise<IInstructor> {
     return await this.instructorRepository.updateInstructorVerification(email);
   }
 }
