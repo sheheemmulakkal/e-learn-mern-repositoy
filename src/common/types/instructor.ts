@@ -10,7 +10,8 @@ export interface IInstructor {
     lastname: string;
     password: string;
     email: string;
-    qualification: string;
+    mobile: number;
+    qualification?: string;
     isBlocked?: boolean;
     isVerified?: boolean;
     wallet?: number;

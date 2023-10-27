@@ -1,6 +1,6 @@
 
 import { OtpRepository } from "../../repositories/implements/otpRepository";
-import { IOtpService} from "../interfaces/IOtpService";
+import { IOtpService} from "../interfaces/otpService.interface";
 import otpGenerator from "otp-generator";
 import nodemailer from "nodemailer";
 import { IOtp } from "../../common/types/otp";

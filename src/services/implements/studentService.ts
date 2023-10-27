@@ -1,6 +1,6 @@
 import { StudenRepository } from "../../repositories/implements/studentRepository";
 import { IStudent } from "../../common/types/student";
-import { IStudentService } from "../interfaces/IStudentService";
+import { IStudentService } from "../interfaces/studentService.interface";
 import { BadRequestError } from "../../common/errors/badRequestError";
 import { NotFoundError } from "../../common/errors/notFoundError";
 

@@ -11,7 +11,8 @@ interface InstructorDoc extends Document {
     lastname: string;
     password: string;
     email: string;
-    qualification: string;
+    mobile: number;
+    qualification?: string;
     isBlocked?: boolean;
     isVerified?: boolean;
     wallet?: number;
@@ -33,6 +34,10 @@ const instructorSchema = new mongoose.Schema({
   },
   email: {
     type: String,
+    required: true
+  },
+  mobile: {
+    type: Number,
     required: true
   },
   qualification: {
@@ -81,4 +86,6 @@ instructorSchema.statics.build = (instructor: IInstructor) => {
 };
 
 const Instructor = mongoose.model<InstructorDoc, InstructorModel>("instructor", instructorSchema);
+
+export { Instructor };
 

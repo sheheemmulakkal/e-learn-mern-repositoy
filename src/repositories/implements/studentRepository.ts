@@ -1,6 +1,6 @@
 import { Student } from "../../models/studentModel";
 import { IStudent } from "../../common/types/student";
-import { IStudnetRepository } from "../interfaces/IStudentRepository";
+import { IStudnetRepository } from "../interfaces/studentRepository.interface";
 
 export class StudenRepository implements IStudnetRepository{
   async createStudent(studentDetails: IStudent): Promise<IStudent> {

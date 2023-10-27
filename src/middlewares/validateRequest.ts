@@ -5,8 +5,10 @@ import { RequestValidationError } from "../common/errors/requestValidationError"
 export const validateRequest = (
   req: Request,
   res: Response,
-  next: NextFunction
+  next: NextFunction 
 ) => {
+  console.log(req.body);
+  
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
