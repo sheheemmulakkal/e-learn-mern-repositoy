@@ -28,7 +28,7 @@ export class StudentController {
       const otp = otpService.generateOtp();
       await otpService.createOtp({email, otp});
       otpService.sendOtpVerificationEmail(email, otp);
-      res.status(201).json({ message: "OTP generated" });
+      res.status(201).json({ message: "OTP generated", email });
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -40,15 +40,24 @@ export class StudentController {
   }
 
   async resendOtp( req: Request, res: Response) {
-    const { email } = req.body;
-    const otp = otpService.generateOtp();
-    await otpService.createOtp({email, otp});
-    otpService.sendOtpVerificationEmail(email, otp);
-    res.status(201).json({ message: "OTP resent"});
+    try {
+      const { email } = req.body;
+      console.log(email);
+      
+      const otp = otpService.generateOtp();
+      await otpService.createOtp({email, otp});
+      otpService.sendOtpVerificationEmail(email, otp);
+      res.status(201).json({ message: "OTP resent"});
+    } catch (error) {
+      if( error instanceof Error)
+        console.log(error.message);
+    }
   }
 
   async verifyStudent(req: Request, res: Response) {
     const { otp, email } = req.body;
+    console.log(otp, email);
+    
     const savedOtp = await otpService.findOtp(email);
     if( otp === savedOtp?.otp) {
       const student: IStudent = await studentService.verifyStudent(email);
@@ -60,7 +69,7 @@ export class StudentController {
         },
         process.env.JWT_KEY!
       );
-      res.status(200).json({ message: "Student Verified" , studentToken: studentJwt});
+      res.status(200).json({ message: "Student Verified" , studentToken: studentJwt, student});
     } else {
       res.status(400).json({ message: "Otp Verification failed"});
     }
@@ -82,13 +91,12 @@ export class StudentController {
               },
               process.env.JWT_KEY!
             );
-            res.status(200).json({message: "Student signed in", studentToken: studentJwt});
+            res.status(200).json({message: "Student signed in", studentToken: studentJwt, student, success: true});
           } else {
             const otp = otpService.generateOtp();
             await otpService.createOtp({email, otp});
             otpService.sendOtpVerificationEmail(email, otp);
-            const maskedEmail = otpService.maskMail(email);
-            throw new NotAuthorizedError(`Not verified, OTP sent to ${maskedEmail}`);
+            throw new NotAuthorizedError("Not verified");
           }
         } else {
           throw new BadRequestError("Incorrect password");

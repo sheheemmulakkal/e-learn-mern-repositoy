@@ -11,7 +11,6 @@ import { IInstructor } from "../common/types/instructor";
 const otpService = new OtpService();
 const instructorService = new InstructorSerivce();
 
-
 export class InstructorController {
   async signup(req: Request, res: Response, next: NextFunction) {
     try {
@@ -22,15 +21,15 @@ export class InstructorController {
         lastname,
         email,
         password: hashedPassword,
-        mobile
+        mobile,
       };
       await instructorService.signup(instructorDetails);
       const otp = otpService.generateOtp();
-      await otpService.createOtp({email,otp});
+      await otpService.createOtp({ email, otp });
       otpService.sendOtpVerificationEmail(email, otp);
-      res.status(201).json({ message: "OTP generated" });
+      res.status(201).json({ message: "OTP generated", email });
     } catch (error) {
-      if( error instanceof Error ) {
+      if (error instanceof Error) {
         next(error);
       }
     }
@@ -39,54 +38,73 @@ export class InstructorController {
   async resendOtp(req: Request, res: Response) {
     const { email } = req.body;
     const otp = otpService.generateOtp();
-    await otpService.createOtp({email, otp});
+    await otpService.createOtp({ email, otp });
     otpService.sendOtpVerificationEmail(email, otp);
-    res.status(201).json({ message: "OTP resent"});
+    res.status(201).json({ message: "OTP resent" });
   }
 
   async VerifyInstructor(req: Request, res: Response) {
     const { otp, email } = req.body;
     const savedOtp = await otpService.findOtp(email);
-    if( otp === savedOtp?.otp) {
-      const instructor: IInstructor = await instructorService.verifyInstructor(email);
+    if (otp === savedOtp?.otp) {
+      const instructor: IInstructor = await instructorService.verifyInstructor(
+        email
+      );
       const instructorJwt = jwt.sign(
         {
           instructorId: instructor.id,
           instructorName: instructor.lastname,
-          instructorEmail: instructor.email
-        }, 
+          instructorEmail: instructor.email,
+        },
         process.env.JWT_KEY!
       );
-      res.status(200).json({ messge: "Instructor verfied", instructorToken: instructorJwt});
+      res
+        .status(200)
+        .json({
+          messge: "Instructor verfied",
+          instructorToken: instructorJwt,
+          instructor,
+        });
     } else {
-      res.status(400).json({ message: "Otp Verification failed"}); 
+      res.status(400).json({ message: "Otp Verification failed" });
     }
   }
 
-  async login(req: Request, res: Response, next: NextFunction){
+  async login(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
       const instructor: IInstructor = await instructorService.login(email);
-      if( !instructor.isBlocked ) {
-        const validPassword = await bcrypt.compare(password, instructor.password);
-        if(validPassword) {
-          if( instructor.isVerified){
+      if (!instructor.isBlocked) {
+        const validPassword = await bcrypt.compare(
+          password,
+          instructor.password
+        );
+        if (validPassword) {
+          if (instructor.isVerified) {
             const instructorJwt = jwt.sign(
               {
                 instructorId: instructor.id,
                 instructorName: instructor.lastname,
-                instructorEmail: instructor.email
-              }, 
+                instructorEmail: instructor.email,
+              },
               process.env.JWT_KEY!
             );
-            
-            res.status(200).json({message: "Instructor signed in", instructorToken: instructorJwt});
+
+            res
+              .status(200)
+              .json({
+                message: "Instructor signed in",
+                instructorToken: instructorJwt,
+                instructor,
+                success: true,
+              });
           } else {
             const otp = otpService.generateOtp();
-            await otpService.createOtp({email, otp});
+            await otpService.createOtp({ email, otp });
             otpService.sendOtpVerificationEmail(email, otp);
-            const maskedEmail = otpService.maskMail(email);
-            throw new NotAuthorizedError(`Not verified, OTP sent to ${maskedEmail}`);
+            throw new NotAuthorizedError(
+              "Not verified"
+            );
           }
         } else {
           throw new BadRequestError("Incorrect password");
@@ -95,11 +113,9 @@ export class InstructorController {
         throw new ForbiddenError("Instructor Blocked");
       }
     } catch (error) {
-      if(error instanceof Error) {
+      if (error instanceof Error) {
         return next(error);
       }
     }
   }
-
 }
-
