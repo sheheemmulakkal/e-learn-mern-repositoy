@@ -42,8 +42,6 @@ export class StudentController {
   async resendOtp( req: Request, res: Response) {
     try {
       const { email } = req.body;
-      console.log(email);
-      
       const otp = otpService.generateOtp();
       await otpService.createOtp({email, otp});
       otpService.sendOtpVerificationEmail(email, otp);
@@ -56,8 +54,6 @@ export class StudentController {
 
   async verifyStudent(req: Request, res: Response) {
     const { otp, email } = req.body;
-    console.log(otp, email);
-    
     const savedOtp = await otpService.findOtp(email);
     if( otp === savedOtp?.otp) {
       const student: IStudent = await studentService.verifyStudent(email);

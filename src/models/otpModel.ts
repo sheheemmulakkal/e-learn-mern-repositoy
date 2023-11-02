@@ -1,7 +1,7 @@
 import mongoose,{ Model, Document } from "mongoose";
 import { IOtp } from "../common/types/otp";
 
-const OTP_EXPIRY_TIME = 10;
+const OTP_EXPIRY_TIME = 60 * 5;
 
 interface OtpModel extends Model<IOtp> {
     build(attrs: IOtp): OtpDoc

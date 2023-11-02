@@ -1,14 +1,14 @@
-import { StudenRepository } from "../../repositories/implements/studentRepository";
+import { StudentRepository } from "../../repositories/implements/studentRepository";
 import { IStudent } from "../../common/types/student";
 import { IStudentService } from "../interfaces/studentService.interface";
 import { BadRequestError } from "../../common/errors/badRequestError";
 import { NotFoundError } from "../../common/errors/notFoundError";
 
 export class StudentService implements IStudentService{
-  private studentRepository: StudenRepository;
+  private studentRepository: StudentRepository;
 
   constructor() {
-    this.studentRepository = new StudenRepository();
+    this.studentRepository = new StudentRepository();
   }
 
   async signup(studentDetails: IStudent): Promise<IStudent> {
