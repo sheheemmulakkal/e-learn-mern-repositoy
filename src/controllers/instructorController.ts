@@ -53,18 +53,25 @@ export class InstructorController {
       const instructorJwt = jwt.sign(
         {
           instructorId: instructor.id,
-          instructorName: instructor.lastname,
-          instructorEmail: instructor.email,
+          role: "instructor",
         },
         process.env.JWT_KEY!
       );
-      res
-        .status(200)
-        .json({
-          messge: "Instructor verfied",
-          instructorToken: instructorJwt,
-          instructor,
-        });
+      const instructorDetails = {
+        _id: instructor.id,
+        firstname: instructor.firstname,
+        lastname: instructor.lastname,
+        email: instructor.email,
+        mobile: instructor.mobile,
+        wallet: instructor.wallet,
+        courses: instructor.courses,
+        role: "instructor",
+      };
+      res.status(200).json({
+        messge: "Instructor verfied",
+        token: instructorJwt,
+        instructor: instructorDetails,
+      });
     } else {
       res.status(400).json({ message: "Otp Verification failed" });
     }
@@ -77,34 +84,38 @@ export class InstructorController {
       if (!instructor.isBlocked) {
         const validPassword = await bcrypt.compare(
           password,
-          instructor.password
+          instructor.password!
         );
         if (validPassword) {
           if (instructor.isVerified) {
             const instructorJwt = jwt.sign(
               {
                 instructorId: instructor.id,
-                instructorName: instructor.lastname,
-                instructorEmail: instructor.email,
+                role: "instructor",
               },
               process.env.JWT_KEY!
             );
-
-            res
-              .status(200)
-              .json({
-                message: "Instructor signed in",
-                instructorToken: instructorJwt,
-                instructor,
-                success: true,
-              });
+            const instructorDetails = {
+              _id: instructor.id,
+              firstname: instructor.firstname,
+              lastname: instructor.lastname,
+              email: instructor.email,
+              mobile: instructor.mobile,
+              wallet: instructor.wallet,
+              courses: instructor.courses,
+              role: "instructor",
+            };
+            res.status(200).json({
+              message: "Instructor signed in",
+              token: instructorJwt,
+              instructor: instructorDetails,
+              success: true,
+            });
           } else {
             const otp = otpService.generateOtp();
             await otpService.createOtp({ email, otp });
             otpService.sendOtpVerificationEmail(email, otp);
-            throw new NotAuthorizedError(
-              "Not verified"
-            );
+            throw new NotAuthorizedError("Not verified");
           }
         } else {
           throw new BadRequestError("Incorrect password");

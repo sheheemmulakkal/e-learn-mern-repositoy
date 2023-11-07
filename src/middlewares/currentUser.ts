@@ -13,7 +13,7 @@ export const isAdminAuth = (
     if (authorizationHeader) {
       const token = authorizationHeader.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_KEY!) as JwtPayload;
-      if (decoded.adminId) {
+      if (decoded.role === "admin") {
         next();
       } else {
         throw new ForbiddenError("Invalid token");
@@ -37,7 +37,7 @@ export const isInstructorAuth = (
     if (authorizationHeader) {
       const token = authorizationHeader.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_KEY!) as JwtPayload;
-      if (decoded.instructorId) {
+      if (decoded.role === "instructor") {
         next();
       } else {
         throw new ForbiddenError("Invalid token");
@@ -61,7 +61,7 @@ export const isStudentAuth = (
     if (authorizationHeader) {
       const token = authorizationHeader.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_KEY!) as JwtPayload;
-      if (decoded.studentId) {
+      if (decoded.role === "student") {
         next();
       } else {
         throw new ForbiddenError("Invalid token");

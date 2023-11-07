@@ -15,15 +15,20 @@ export class AdminController {
         const adminJwt = jwt.sign(
           {
             adminId: admin.id,
-            adminName: "Admin",
-            adminEmail: admin.email,
+            role: "admin",
           },
           process.env.JWT_KEY!
         );
+        const adminDetails = {
+          _id: admin.id,
+          email: admin.email,
+          role: "admin"
+        };
+
         res.status(200).json({
-          admin,
+          admin: adminDetails,
           message: "Admin signed in",
-          adminToken: adminJwt,
+          token: adminJwt,
           success: true,
         });
       } else {

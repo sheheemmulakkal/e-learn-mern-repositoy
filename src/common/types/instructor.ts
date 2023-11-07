@@ -8,7 +8,7 @@ export interface IInstructor {
     id?: string
     firstname: string;
     lastname: string;
-    password: string;
+    password?: string;
     email: string;
     mobile: number;
     qualification?: string;

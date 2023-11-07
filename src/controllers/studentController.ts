@@ -8,7 +8,6 @@ import { BadRequestError } from "../common/errors/badRequestError";
 import { ForbiddenError } from "../common/errors/forbiddenError";
 import { NotAuthorizedError } from "../common/errors/notAuthorizedError";
 
-
 const studentService = new StudentService();
 const otpService = new OtpService();
 
@@ -26,7 +25,7 @@ export class StudentController {
       };
       await studentService.signup(studentDetails);
       const otp = otpService.generateOtp();
-      await otpService.createOtp({email, otp});
+      await otpService.createOtp({ email, otp });
       otpService.sendOtpVerificationEmail(email, otp);
       res.status(201).json({ message: "OTP generated", email });
     } catch (error) {
@@ -39,35 +38,49 @@ export class StudentController {
     }
   }
 
-  async resendOtp( req: Request, res: Response) {
+  async resendOtp(req: Request, res: Response) {
     try {
       const { email } = req.body;
       const otp = otpService.generateOtp();
-      await otpService.createOtp({email, otp});
+      await otpService.createOtp({ email, otp });
       otpService.sendOtpVerificationEmail(email, otp);
-      res.status(201).json({ message: "OTP resent"});
+      res.status(201).json({ message: "OTP resent" });
     } catch (error) {
-      if( error instanceof Error)
-        console.log(error.message);
+      if (error instanceof Error) console.log(error.message);
     }
   }
 
   async verifyStudent(req: Request, res: Response) {
     const { otp, email } = req.body;
     const savedOtp = await otpService.findOtp(email);
-    if( otp === savedOtp?.otp) {
+    if (otp === savedOtp?.otp) {
       const student: IStudent = await studentService.verifyStudent(email);
       const studentJwt = jwt.sign(
         {
           studentId: student.id,
-          studentName: student.lastname,
-          studentEmail: student.email,
+          role: "student",
         },
         process.env.JWT_KEY!
       );
-      res.status(200).json({ message: "Student Verified" , studentToken: studentJwt, student});
+      const studentDetails = {
+        _id: student.id,
+        firstname: student.firstname,
+        lastname: student.lastname,
+        email: student.email,
+        mobile: student.mobile,
+        wallet: student.wallet,
+        courses: student.courses,
+        role: "student"
+      };
+      res
+        .status(200)
+        .json({
+          message: "Student Verified",
+          token: studentJwt,
+          student: studentDetails,
+        });
     } else {
-      res.status(400).json({ message: "Otp Verification failed"});
+      res.status(400).json({ message: "Otp Verification failed" });
     }
   }
 
@@ -75,22 +88,38 @@ export class StudentController {
     try {
       const { email, password } = req.body;
       const student: IStudent = await studentService.login(email);
-      if( !student.isBlocked ) {
-        const validPassword = await bcrypt.compare(password, student.password);
-        if(validPassword) {
-          if(student.isVerified){
+      if (!student.isBlocked) {
+        const validPassword = await bcrypt.compare(password, student.password!);
+        if (validPassword) {
+          if (student.isVerified) {
             const studentJwt = jwt.sign(
               {
                 studentId: student.id,
-                studentName: student.lastname,
-                studentEmail: student.email,
+                role: "student",
               },
               process.env.JWT_KEY!
             );
-            res.status(200).json({message: "Student signed in", studentToken: studentJwt, student, success: true});
+            const studentDetails = {
+              _id: student.id,
+              firstname: student.firstname,
+              lastname: student.lastname,
+              email: student.email,
+              mobile: student.mobile,
+              wallet: student.wallet,
+              courses: student.courses,
+              role: "student"
+            };
+            res
+              .status(200)
+              .json({
+                message: "Student signed in",
+                token: studentJwt,
+                student: studentDetails,
+                success: true,
+              });
           } else {
             const otp = otpService.generateOtp();
-            await otpService.createOtp({email, otp});
+            await otpService.createOtp({ email, otp });
             otpService.sendOtpVerificationEmail(email, otp);
             throw new NotAuthorizedError("Not verified");
           }
@@ -100,12 +129,10 @@ export class StudentController {
       } else {
         throw new ForbiddenError("Student Blocked");
       }
-      
     } catch (error) {
-      if(error instanceof Error) {
+      if (error instanceof Error) {
         return next(error);
       }
     }
   }
-
 }
