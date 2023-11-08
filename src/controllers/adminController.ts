@@ -22,7 +22,7 @@ export class AdminController {
         const adminDetails = {
           _id: admin.id,
           email: admin.email,
-          role: "admin"
+          role: "admin",
         };
 
         res.status(200).json({
@@ -116,6 +116,200 @@ export class AdminController {
       }
       await adminService.unblockStudent(studentId);
       res.status(200).json({ success: true });
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async getAllCategories(req: Request, res: Response, next: NextFunction) {
+    try {
+      const categories = await adminService.getAllCategories();
+      res.status(200).json({ categories });
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async addCategory(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { category } = req.body;
+      console.log(category);
+
+      const upperCaseCategory = category.toUpperCase();
+      const newCategory = await adminService.addCategory(upperCaseCategory);
+      res.status(201).json({ category: newCategory });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+        next(error);
+      }
+    }
+  }
+
+  async editCategory(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { categoryId, data } = req.body;
+      const upperCaseData = data.toUpperCase();
+      const updatedCaetgory = await adminService.editCategory(
+        categoryId,
+        upperCaseData
+      );
+      res.status(200).json({ category: updatedCaetgory });
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+
+        next(error);
+      }
+    }
+  }
+
+  async listCategory(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { categoryId } = req.body;
+      const listedCategory = await adminService.listCategory(categoryId);
+      res.status(200).json({ category: listedCategory });
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async unlistCategory(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { categoryId } = req.body;
+      const unlistedCategory = await adminService.unlistCategory(categoryId);
+      res.status(200).json({ category: unlistedCategory });
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+  // =============================================================================
+  async getAllLevels(req: Request, res: Response, next: NextFunction) {
+    try {
+      const levels = await adminService.getAllLevels();
+      res.status(200).json({ levels });
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async addLevel(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { level } = req.body;
+      const upperCaseLevel = level.toUpperCase();
+      const newLevel = await adminService.addLevel(upperCaseLevel);
+      res.status(201).json({ level: newLevel });
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async editLevel(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { levelId, data } = req.body;
+      const upperCaseData = data.toUpperCase();
+      const updatedLevel = await adminService.editLevel(levelId, upperCaseData);
+      res.status(200).json({ level: updatedLevel });
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async listLevel(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { levelId } = req.body;
+      const listedLevel = await adminService.listLevel(levelId);
+      res.status(200).json({ level: listedLevel });
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async unlistLevel(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { levelId } = req.body;
+      const unlistedLevel = await adminService.unlistLevel(levelId);
+      res.status(200).json({ level: unlistedLevel });
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async getAllLanguages(req: Request, res: Response, next: NextFunction) {
+    try {
+      const languages = await adminService.getAllLanguages();
+      res.status(200).json({ languages });
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async addLanguage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { language } = req.body;
+      const upperCaseLanguage = language.toUpperCase();
+      const newLanguage = await adminService.addLanguage(upperCaseLanguage);
+      res.status(201).json({ language: newLanguage });
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async editLanguage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { languageId, data } = req.body;
+      const upperCaseData = data.toUpperCase();
+      const updatedLanguage = await adminService.editLanguage(
+        languageId,
+        upperCaseData
+      );
+      res.status(200).json({ language: updatedLanguage });
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async listLanguage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { languageId } = req.body;
+      const listedLanguage = await adminService.listLanguage(languageId);
+      res.status(200).json({ language: listedLanguage });
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async unlistLanguage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { languageId } = req.body;
+      const unlistedLanguage = await adminService.unlistLanguage(languageId);
+      res.status(200).json({ language: unlistedLanguage });
     } catch (error) {
       if (error instanceof Error) {
         next(error);
