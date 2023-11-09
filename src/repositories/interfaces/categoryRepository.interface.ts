@@ -8,4 +8,5 @@ export interface ICategoryRepository {
   listCategory(categoryId: string): Promise<ICategory>;
   unlistCategory(categoryId: string): Promise<ICategory>;
   getAllCategories(): Promise<ICategory[] | null>;
+  getListedCategories(): Promise<ICategory[] | null>;
 }

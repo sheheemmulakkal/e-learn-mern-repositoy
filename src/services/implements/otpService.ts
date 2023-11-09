@@ -1,11 +1,8 @@
-
 import { OtpRepository } from "../../repositories/implements/otpRepository";
-import { IOtpService} from "../interfaces/otpService.interface";
+import { IOtpService } from "../interfaces/otpService.interface";
 import otpGenerator from "otp-generator";
 import nodemailer from "nodemailer";
 import { IOtp } from "../../common/types/otp";
-
-
 
 export class OtpService implements IOtpService {
   private otpRepository: OtpRepository;
@@ -15,7 +12,7 @@ export class OtpService implements IOtpService {
 
   async createOtp(otpDetails: IOtp): Promise<IOtp | undefined> {
     const otp = await this.otpRepository.findOtp(otpDetails.email);
-    if( !otp ) {
+    if (!otp) {
       return this.otpRepository.createOtp(otpDetails);
     } else {
       return this.otpRepository.updateOtp(otpDetails);
@@ -28,16 +25,15 @@ export class OtpService implements IOtpService {
 
   generateOtp(): string {
     const generatedOtp = otpGenerator.generate(6, {
-      upperCaseAlphabets : false,
-      lowerCaseAlphabets : false,
-      specialChars : false
+      upperCaseAlphabets: false,
+      lowerCaseAlphabets: false,
+      specialChars: false,
     });
     console.log(generatedOtp);
     return generatedOtp;
   }
 
   async sendOtpVerificationEmail(email: string, otp: string): Promise<void> {
-
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 587,
@@ -45,7 +41,7 @@ export class OtpService implements IOtpService {
       secure: true,
       auth: {
         user: process.env.USER_EMAIL,
-        pass: process.env.USER_EMAIL_PASSWORD
+        pass: process.env.USER_EMAIL_PASSWORD,
       },
     });
     transporter.sendMail({
@@ -71,7 +67,7 @@ export class OtpService implements IOtpService {
             <p>India</p>
           </div>
         </div>
-      </div>`
+      </div>`,
     });
   }
 

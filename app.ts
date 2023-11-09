@@ -8,9 +8,11 @@ import { errorHandler } from "./src/middlewares/errorHandler";
 
 const app = express();
 
-app.use(cors({
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH"]
-}));
+app.use(
+  cors({
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+  })
+);
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 

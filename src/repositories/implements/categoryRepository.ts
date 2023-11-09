@@ -37,4 +37,7 @@ export class CategoryRepository implements ICategoryRepository {
   async getAllCategories(): Promise<ICategory[] | null> {
     return Category.find();
   }
+  async getListedCategories(): Promise<ICategory[] | null> {
+    return Category.find({ status: true });
+  }
 }

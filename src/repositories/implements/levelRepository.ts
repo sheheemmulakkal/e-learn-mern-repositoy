@@ -37,4 +37,7 @@ export class LevelRepository implements ILevelRepository {
   async getAllLevels(): Promise<ILevel[] | null> {
     return Level.find();
   }
+  async getListedLevels(): Promise<ILevel[] | null> {
+    return Level.find({ status: true });
+  }
 }

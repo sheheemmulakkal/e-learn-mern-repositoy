@@ -5,12 +5,14 @@ import { StudentRepository } from "../../repositories/implements/studentReposito
 import { LevelRepository } from "../../repositories/implements/levelRepository";
 import { LanguageRepostory } from "../../repositories/implements/languageRepostory";
 import { CategoryRepository } from "../../repositories/implements/categoryRepository";
+import { CourseRepository } from "../../repositories/implements/courseRepository";
 import { IAdmin } from "../../common/types/admin";
 import { IStudent } from "../../common/types/student";
 import { IInstructor } from "../../common/types/instructor";
 import { ILanguage } from "../../common/types/language";
 import { ILevel } from "../../common/types/level";
 import { ICategory } from "../../common/types/category";
+import { CourseApproval, ICourse } from "../../common/types/course";
 import { NotFoundError } from "../../common/errors/notFoundError";
 import { BadRequestError } from "../../common/errors/badRequestError";
 
@@ -21,6 +23,7 @@ export class AdminService implements IAdminService {
   private categoryRepository: CategoryRepository;
   private languageRepository: LanguageRepostory;
   private levelRepository: LevelRepository;
+  private courseRepository: CourseRepository;
   constructor() {
     this.adminRepository = new AdminRepository();
     this.instructorRepository = new InstructorRepository();
@@ -28,6 +31,7 @@ export class AdminService implements IAdminService {
     this.categoryRepository = new CategoryRepository();
     this.languageRepository = new LanguageRepostory();
     this.levelRepository = new LevelRepository();
+    this.courseRepository = new CourseRepository();
   }
 
   async login(email: string): Promise<IAdmin> {
@@ -141,5 +145,26 @@ export class AdminService implements IAdminService {
   }
   async unlistLanguage(languageId: string): Promise<ILanguage> {
     return this.languageRepository.unlistLanguage(languageId);
+  }
+
+  async getAllCourses(): Promise<ICourse[] | null> {
+    return await this.courseRepository.getAllCourses();
+  }
+  async getCoursesByApproval(
+    approval: CourseApproval
+  ): Promise<ICourse[] | null> {
+    return await this.courseRepository.getCoursesByApproval(approval);
+  }
+  async courseApproval(
+    courseId: string,
+    approval: CourseApproval
+  ): Promise<ICourse> {
+    return await this.courseRepository.courseApproval(courseId, approval);
+  }
+  async listCourse(courseId: string): Promise<ICourse> {
+    return await this.courseRepository.listCourse(courseId);
+  }
+  async unlistCourse(courseId: string): Promise<ICourse> {
+    return await this.courseRepository.unlistCourse(courseId);
   }
 }

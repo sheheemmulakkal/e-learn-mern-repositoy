@@ -8,4 +8,5 @@ export interface ILevelRepository {
   listLevel(levelId: string): Promise<ILevel>;
   unlistLevel(levelId: string): Promise<ILevel>;
   getAllLevels(): Promise<ILevel[] | null>;
+  getListedLevels(): Promise<ILevel[] | null>;
 }

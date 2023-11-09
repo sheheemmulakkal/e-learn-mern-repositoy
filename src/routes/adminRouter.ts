@@ -17,11 +17,11 @@ router.patch(
   adminController.unblockInstructor
 );
 
-router.get("/categories", adminController.getAllCategories);
-router.post("/category", adminController.addCategory);
-router.put("/category", adminController.editCategory);
-router.patch("/list-category", adminController.listCategory);
-router.patch("/unlist-category", adminController.unlistCategory);
+router.get("/categories", isAdminAuth, adminController.getAllCategories);
+router.post("/category", isAdminAuth, adminController.addCategory);
+router.put("/category", isAdminAuth, adminController.editCategory);
+router.patch("/list-category", isAdminAuth, adminController.listCategory);
+router.patch("/unlist-category", isAdminAuth, adminController.unlistCategory);
 
 router.get("/levels", isAdminAuth, adminController.getAllLevels);
 router.post("/level", isAdminAuth, adminController.addLevel);
@@ -34,5 +34,17 @@ router.post("/language", isAdminAuth, adminController.addLanguage);
 router.put("/language", isAdminAuth, adminController.editLanguage);
 router.patch("/list-language", isAdminAuth, adminController.listLanguage);
 router.patch("/unlist-language", isAdminAuth, adminController.unlistLanguage);
+
+router.get("/courses", isAdminAuth, adminController.getAllCourses);
+router.get("/pending-course", isAdminAuth, adminController.getPendingCourses);
+router.get("/rejected-course", isAdminAuth, adminController.getRejectedCourses);
+router.get("/approved-course", isAdminAuth, adminController.getApprovedCourses);
+router.patch("/list-course", isAdminAuth, adminController.listCourse);
+router.patch("/unlist-course", isAdminAuth, adminController.unlistCourse);
+router.patch("/approve-course", isAdminAuth, adminController.approveCourse);
+router.patch("/reject-course", isAdminAuth, adminController.rejectCourse);
+router.get("/course/:id/module");
+router.patch("/list-module");
+router.patch("/unlist-module");
 
 export default router;

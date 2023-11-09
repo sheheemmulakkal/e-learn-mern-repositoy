@@ -129,4 +129,108 @@ export class InstructorController {
       }
     }
   }
+
+  async getMycourses(req: Request, res: Response, next: NextFunction) {
+    try {
+      const instructorId = req.currentUser;
+      if (!instructorId) {
+        throw new ForbiddenError("Invalid token");
+      }
+      const courses = await instructorService.getMyCourses(instructorId);
+      console.log(courses);
+
+      res.status(200).json(courses);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async addCourse(req: Request, res: Response, next: NextFunction) {
+    try {
+      const instructorId = req.currentUser;
+      const { name, description, level, language, category, price } = req.body;
+      const courseCredentials = {
+        name,
+        description,
+        level,
+        language,
+        category,
+        price,
+        instructor: instructorId,
+      };
+      const course = await instructorService.createCourse(courseCredentials);
+      res.status(200).json(course);
+    } catch (error) {
+      if (error instanceof Error) {
+        console.log(error.message);
+
+        next(error);
+      }
+    }
+  }
+
+  async getSingleCourse(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { courseId } = req.body;
+      if (!courseId) {
+        throw new BadRequestError("Course id not found");
+      }
+      const course = await instructorService.getSingleCourse(courseId);
+      res.status(200).json(course);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async updateCourse(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id, name, description, level, language, category, price } =
+        req.body;
+      const courseCredentials = {
+        name,
+        id,
+        description,
+        level,
+        language,
+        category,
+        price,
+      };
+      const course = await instructorService.updateCourse(courseCredentials);
+      res.status(200).json(course);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async deleteCourse(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { courseId } = req.body;
+      if (!courseId) {
+        throw new BadRequestError("Course id not found");
+      }
+      const course = await instructorService.deleteCourse(courseId);
+      res.status(200).json(course);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async getAllCategories(req: Request, res: Response, next: NextFunction) {
+    try {
+      const categories = await instructorService.getAllCategories();
+      res.status(200).json(categories);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
 }

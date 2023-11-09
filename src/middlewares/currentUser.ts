@@ -3,6 +3,12 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { ForbiddenError } from "../common/errors/forbiddenError";
 
+declare module "express" {
+  interface Request {
+    currentUser?: string;
+  }
+}
+
 export const isAdminAuth = (
   req: Request,
   res: Response,
@@ -14,6 +20,7 @@ export const isAdminAuth = (
       const token = authorizationHeader.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_KEY!) as JwtPayload;
       if (decoded.role === "admin") {
+        req.currentUser = decoded.adminId;
         next();
       } else {
         throw new ForbiddenError("Invalid token");
@@ -34,10 +41,12 @@ export const isInstructorAuth = (
 ) => {
   try {
     const authorizationHeader = req.headers.authorization;
+
     if (authorizationHeader) {
       const token = authorizationHeader.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_KEY!) as JwtPayload;
       if (decoded.role === "instructor") {
+        req.currentUser = decoded.instructorId;
         next();
       } else {
         throw new ForbiddenError("Invalid token");
@@ -58,9 +67,11 @@ export const isStudentAuth = (
 ) => {
   try {
     const authorizationHeader = req.headers.authorization;
+
     if (authorizationHeader) {
       const token = authorizationHeader.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_KEY!) as JwtPayload;
+
       if (decoded.role === "student") {
         next();
       } else {

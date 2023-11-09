@@ -70,15 +70,13 @@ export class StudentController {
         mobile: student.mobile,
         wallet: student.wallet,
         courses: student.courses,
-        role: "student"
+        role: "student",
       };
-      res
-        .status(200)
-        .json({
-          message: "Student Verified",
-          token: studentJwt,
-          student: studentDetails,
-        });
+      res.status(200).json({
+        message: "Student Verified",
+        token: studentJwt,
+        student: studentDetails,
+      });
     } else {
       res.status(400).json({ message: "Otp Verification failed" });
     }
@@ -107,16 +105,14 @@ export class StudentController {
               mobile: student.mobile,
               wallet: student.wallet,
               courses: student.courses,
-              role: "student"
+              role: "student",
             };
-            res
-              .status(200)
-              .json({
-                message: "Student signed in",
-                token: studentJwt,
-                student: studentDetails,
-                success: true,
-              });
+            res.status(200).json({
+              message: "Student signed in",
+              token: studentJwt,
+              student: studentDetails,
+              success: true,
+            });
           } else {
             const otp = otpService.generateOtp();
             await otpService.createOtp({ email, otp });
@@ -128,6 +124,66 @@ export class StudentController {
         }
       } else {
         throw new ForbiddenError("Student Blocked");
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        return next(error);
+      }
+    }
+  }
+
+  async getCourses(req: Request, res: Response, next: NextFunction) {
+    try {
+      const courses = await studentService.getCourses();
+      res.status(200).json(courses);
+    } catch (error) {
+      if (error instanceof Error) {
+        return next(error);
+      }
+    }
+  }
+
+  async updatePassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { newPassword, currentPassword } = req.body;
+      const studentId = req.currentUser;
+      if (!studentId) {
+        throw new NotAuthorizedError("Invalid token");
+      }
+      const student: IStudent = await studentService.findStudentById(studentId);
+
+      const isPasswordVerified = await bcrypt.compare(
+        currentPassword,
+        student.password!
+      );
+
+      if (!isPasswordVerified) {
+        throw new BadRequestError("Incorrect password");
+      } else {
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        const {
+          firstname,
+          lastname,
+          email,
+          id,
+          mobile,
+          courses,
+          wallet,
+          isBlocked,
+          isVerified,
+        } = await studentService.updatePassword(studentId, hashedPassword);
+        const updatedData = {
+          firstname,
+          lastname,
+          email,
+          id,
+          mobile,
+          courses,
+          wallet,
+          isBlocked,
+          isVerified,
+        };
+        res.status(200).json(updatedData);
       }
     } catch (error) {
       if (error instanceof Error) {

@@ -37,4 +37,7 @@ export class LanguageRepostory implements ILanguageRepository {
   async getAllLanguages(): Promise<ILanguage[] | null> {
     return await Language.find();
   }
+  async getListedLanguages(): Promise<ILanguage[] | null> {
+    return await Language.find({ status: true });
+  }
 }

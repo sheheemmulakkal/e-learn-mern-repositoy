@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { AdminService } from "../services/implements/adminService";
 import { IAdmin } from "../common/types/admin";
 import { BadRequestError } from "../common/errors/badRequestError";
+import { CourseApproval } from "../common/types/course";
 
 const adminService = new AdminService();
 
@@ -162,7 +163,6 @@ export class AdminController {
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);
-
         next(error);
       }
     }
@@ -172,7 +172,7 @@ export class AdminController {
     try {
       const { categoryId } = req.body;
       const listedCategory = await adminService.listCategory(categoryId);
-      res.status(200).json({ category: listedCategory });
+      res.status(200).json({ category: listedCategory, success: true });
     } catch (error) {
       if (error instanceof Error) {
         next(error);
@@ -184,14 +184,14 @@ export class AdminController {
     try {
       const { categoryId } = req.body;
       const unlistedCategory = await adminService.unlistCategory(categoryId);
-      res.status(200).json({ category: unlistedCategory });
+      res.status(200).json({ category: unlistedCategory, success: true });
     } catch (error) {
       if (error instanceof Error) {
         next(error);
       }
     }
   }
-  // =============================================================================
+
   async getAllLevels(req: Request, res: Response, next: NextFunction) {
     try {
       const levels = await adminService.getAllLevels();
@@ -233,7 +233,7 @@ export class AdminController {
     try {
       const { levelId } = req.body;
       const listedLevel = await adminService.listLevel(levelId);
-      res.status(200).json({ level: listedLevel });
+      res.status(200).json({ level: listedLevel, success: true });
     } catch (error) {
       if (error instanceof Error) {
         next(error);
@@ -245,7 +245,7 @@ export class AdminController {
     try {
       const { levelId } = req.body;
       const unlistedLevel = await adminService.unlistLevel(levelId);
-      res.status(200).json({ level: unlistedLevel });
+      res.status(200).json({ level: unlistedLevel, success: true });
     } catch (error) {
       if (error instanceof Error) {
         next(error);
@@ -297,7 +297,7 @@ export class AdminController {
     try {
       const { languageId } = req.body;
       const listedLanguage = await adminService.listLanguage(languageId);
-      res.status(200).json({ language: listedLanguage });
+      res.status(200).json({ language: listedLanguage, success: true });
     } catch (error) {
       if (error instanceof Error) {
         next(error);
@@ -309,7 +309,123 @@ export class AdminController {
     try {
       const { languageId } = req.body;
       const unlistedLanguage = await adminService.unlistLanguage(languageId);
-      res.status(200).json({ language: unlistedLanguage });
+      res.status(200).json({ language: unlistedLanguage, success: true });
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async getAllCourses(req: Request, res: Response, next: NextFunction) {
+    try {
+      const courses = await adminService.getAllCourses();
+      res.status(200).json(courses);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async getPendingCourses(req: Request, res: Response, next: NextFunction) {
+    try {
+      const pendingCourses = await adminService.getCoursesByApproval(
+        CourseApproval.pending
+      );
+      res.status(200).json(pendingCourses);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async getRejectedCourses(req: Request, res: Response, next: NextFunction) {
+    try {
+      const rejectedCourses = await adminService.getCoursesByApproval(
+        CourseApproval.rejected
+      );
+      res.status(200).json(rejectedCourses);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async getApprovedCourses(req: Request, res: Response, next: NextFunction) {
+    try {
+      const approvedCourses = await adminService.getCoursesByApproval(
+        CourseApproval.approved
+      );
+      res.status(200).json(approvedCourses);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async listCourse(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { courseId } = req.body;
+      if (!courseId) {
+        throw new BadRequestError("Course Id not found");
+      }
+      const course = await adminService.listCourse(courseId);
+      res.status(200).json(course);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async unlistCourse(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { courseId } = req.body;
+      if (!courseId) {
+        throw new BadRequestError("Course Id not found");
+      }
+      const course = await adminService.unlistCourse(courseId);
+      res.status(200).json(course);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async approveCourse(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { courseId } = req.body;
+      if (!courseId) {
+        throw new BadRequestError("Course Id not found");
+      }
+      const course = await adminService.courseApproval(
+        courseId,
+        CourseApproval.approved
+      );
+      res.status(200).json(course);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async rejectCourse(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { courseId } = req.body;
+      if (!courseId) {
+        throw new BadRequestError("Course Id not found");
+      }
+      const course = await adminService.courseApproval(
+        courseId,
+        CourseApproval.rejected
+      );
+      res.status(200).json(course);
     } catch (error) {
       if (error instanceof Error) {
         next(error);
