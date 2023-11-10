@@ -137,8 +137,6 @@ export class InstructorController {
         throw new ForbiddenError("Invalid token");
       }
       const courses = await instructorService.getMyCourses(instructorId);
-      console.log(courses);
-
       res.status(200).json(courses);
     } catch (error) {
       if (error instanceof Error) {

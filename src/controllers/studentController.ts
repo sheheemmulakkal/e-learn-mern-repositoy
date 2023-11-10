@@ -148,6 +148,8 @@ export class StudentController {
       const { newPassword, currentPassword } = req.body;
       const studentId = req.currentUser;
       if (!studentId) {
+        console.log("hiiiiiiiiiiiiiiiii");
+
         throw new NotAuthorizedError("Invalid token");
       }
       const student: IStudent = await studentService.findStudentById(studentId);
