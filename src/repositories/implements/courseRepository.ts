@@ -18,7 +18,10 @@ export class CourseRepository implements ICourseRepository {
   }
 
   async getCourseByInstructor(instructorId: string): Promise<ICourse[] | null> {
-    return await Course.find({ instructor: instructorId });
+    return await Course.find({ instructor: instructorId })
+      .populate("category")
+      .populate("level")
+      .populate("language");
   }
 
   async getSingleCourseForInstructor(
