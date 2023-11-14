@@ -70,6 +70,7 @@ export class StudentController {
         mobile: student.mobile,
         wallet: student.wallet,
         courses: student.courses,
+        image: student.image,
         role: "student",
       };
       res.status(200).json({
@@ -105,6 +106,8 @@ export class StudentController {
               mobile: student.mobile,
               wallet: student.wallet,
               courses: student.courses,
+              image: student.image,
+
               role: "student",
             };
             res.status(200).json({
@@ -213,10 +216,20 @@ export class StudentController {
   async udateProfileImage(req: Request, res: Response, next: NextFunction) {
     try {
       const id = req.currentUser;
-      const { image } = req.body;
-      const student = await studentService.updateProfileImage(id!, image);
+      const file = req.file;
+      if (!id) {
+        throw new NotAuthorizedError("Id not found");
+      }
+      if (!file) {
+        throw new BadRequestError("Image not found");
+      }
+      const student = await studentService.updateProfileImage(id!, file);
+      console.log(student);
+
       res.status(200).json(student);
     } catch (error) {
+      console.log(error);
+
       if (error instanceof Error) {
         return next(error);
       }

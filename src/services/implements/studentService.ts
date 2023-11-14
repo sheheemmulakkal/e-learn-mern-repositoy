@@ -5,6 +5,8 @@ import { BadRequestError } from "../../common/errors/badRequestError";
 import { NotFoundError } from "../../common/errors/notFoundError";
 import { ICourse } from "../../common/types/course";
 import { CourseRepository } from "../../repositories/implements/courseRepository";
+import s3 from "../../../config/aws.config";
+import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 
 export class StudentService implements IStudentService {
   private studentRepository: StudentRepository;
@@ -52,9 +54,31 @@ export class StudentService implements IStudentService {
 
   async updateProfileImage(
     studentId: string,
-    image: string
+    file: Express.Multer.File
   ): Promise<IStudent> {
-    return await this.studentRepository.updateImage(studentId, image);
+    try {
+      const { image } = await this.studentRepository.findStudentById(studentId);
+      if (image) {
+        const fileName = decodeURIComponent(image.split("/").pop()!.trim());
+        const existingParams = {
+          Bucket: "eduvistabucket-aws",
+          Key: `profile-images/${fileName}`,
+        };
+        await s3.send(new DeleteObjectCommand(existingParams));
+      }
+      const key = `profile-images/${file.originalname}`;
+      const params = {
+        Bucket: "eduvistabucket-aws",
+        Key: key,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+      };
+      const filePath = `https://${params.Bucket}.s3.${process.env.AWS_S3_REGION}.amazonaws.com/${params.Key}`;
+      await s3.send(new PutObjectCommand(params));
+      return await this.studentRepository.updateImage(studentId, filePath);
+    } catch (error) {
+      throw new BadRequestError("Couldn't upload profile image");
+    }
   }
 
   async updateStudent(studentDetails: IStudent): Promise<IStudent> {

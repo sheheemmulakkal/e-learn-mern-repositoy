@@ -8,5 +8,8 @@ export interface IStudentService {
   updatePassword(studentId: string, password: string): Promise<IStudent>;
   findStudentById(studentId: string): Promise<IStudent>;
   updateStudent(studentDetails: IStudent): Promise<IStudent>;
-  updateProfileImage(studentId: string, image: string): Promise<IStudent>;
+  updateProfileImage(
+    studentId: string,
+    file: Express.Multer.File
+  ): Promise<IStudent>;
 }
