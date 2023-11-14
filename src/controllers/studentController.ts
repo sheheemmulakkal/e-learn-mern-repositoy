@@ -148,8 +148,6 @@ export class StudentController {
       const { newPassword, currentPassword } = req.body;
       const studentId = req.currentUser;
       if (!studentId) {
-        console.log("hiiiiiiiiiiiiiiiii");
-
         throw new NotAuthorizedError("Invalid token");
       }
       const student: IStudent = await studentService.findStudentById(studentId);
@@ -187,6 +185,37 @@ export class StudentController {
         };
         res.status(200).json(updatedData);
       }
+    } catch (error) {
+      if (error instanceof Error) {
+        return next(error);
+      }
+    }
+  }
+
+  async udateProfile(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id = req.currentUser;
+      const { firstname, lastname, mobile } = req.body;
+      const student = await studentService.updateStudent({
+        id,
+        firstname,
+        lastname,
+        mobile,
+      });
+      res.status(200).json(student);
+    } catch (error) {
+      if (error instanceof Error) {
+        return next(error);
+      }
+    }
+  }
+
+  async udateProfileImage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id = req.currentUser;
+      const { image } = req.body;
+      const student = await studentService.updateProfileImage(id!, image);
+      res.status(200).json(student);
     } catch (error) {
       if (error instanceof Error) {
         return next(error);

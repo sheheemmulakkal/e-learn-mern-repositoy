@@ -23,5 +23,6 @@ router.patch(
   isStudentAuth,
   studentController.updatePassword
 );
+router.put("/update-profile");
 
 export default router;

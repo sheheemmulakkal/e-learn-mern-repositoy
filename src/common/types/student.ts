@@ -5,6 +5,7 @@ export interface IStudent {
   password?: string;
   email?: string;
   mobile?: number;
+  image?: string;
   wallet?: number;
   isBlocked?: boolean;
   isVerified?: boolean;

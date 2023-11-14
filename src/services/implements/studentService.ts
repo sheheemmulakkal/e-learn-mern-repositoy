@@ -49,4 +49,15 @@ export class StudentService implements IStudentService {
   async updatePassword(studentId: string, password: string): Promise<IStudent> {
     return await this.studentRepository.udpatePassword(studentId, password);
   }
+
+  async updateProfileImage(
+    studentId: string,
+    image: string
+  ): Promise<IStudent> {
+    return await this.studentRepository.updateImage(studentId, image);
+  }
+
+  async updateStudent(studentDetails: IStudent): Promise<IStudent> {
+    return await this.studentRepository.updateStudent(studentDetails);
+  }
 }

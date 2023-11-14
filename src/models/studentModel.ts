@@ -10,6 +10,7 @@ interface StudentDoc extends Document {
   lastname: string;
   password: string;
   mobile: number;
+  image?: string;
   email: string;
   isBlocked?: boolean;
   wallet?: number;
@@ -38,6 +39,9 @@ const studentSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+    image: {
+      type: String,
+    },
     isBlocked: {
       type: Boolean,
       default: false,
@@ -48,7 +52,7 @@ const studentSchema = new mongoose.Schema(
     },
     isVerified: {
       type: Boolean,
-      default: false
+      default: false,
     },
     courses: [
       {

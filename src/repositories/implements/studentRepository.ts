@@ -54,4 +54,29 @@ export class StudentRepository implements IStudnetRepository {
     });
     return await student.save();
   }
+
+  async updateStudent(studentDetails: IStudent): Promise<IStudent> {
+    const { id, firstname, lastname, mobile } = studentDetails;
+    const student = await Student.findById(id);
+    if (!student) {
+      throw new BadRequestError("Student not found");
+    }
+    student.set({
+      firstname,
+      lastname,
+      mobile,
+    });
+    return await student.save();
+  }
+
+  async updateImage(studentId: string, image: string): Promise<IStudent> {
+    const student = await Student.findById(studentId);
+    if (!student) {
+      throw new BadRequestError("Id not valid");
+    }
+    student.set({
+      image,
+    });
+    return await student.save();
+  }
 }
