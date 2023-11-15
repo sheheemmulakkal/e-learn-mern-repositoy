@@ -81,7 +81,7 @@ export class StudentService implements IStudentService {
     }
   }
 
-  async updateStudent(studentDetails: IStudent): Promise<IStudent> {
-    return await this.studentRepository.updateStudent(studentDetails);
+  async updateStudentName(studentDetails: IStudent): Promise<IStudent> {
+    return await this.studentRepository.updateStudentName(studentDetails);
   }
 }

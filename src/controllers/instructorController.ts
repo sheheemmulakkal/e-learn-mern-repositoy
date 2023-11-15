@@ -231,4 +231,21 @@ export class InstructorController {
       }
     }
   }
+
+  async createModule(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { name, description, courseId, order } = req.body;
+      const file = req.file;
+      const module = await instructorService.createModule(
+        { name, description, courseId },
+        order,
+        file!
+      );
+      res.status(200).json({ message: "success", module });
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
 }

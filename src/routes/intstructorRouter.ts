@@ -4,6 +4,8 @@ import { signupValidation, courseValidation } from "../middlewares/validations";
 import { isInstructorAuth } from "../middlewares/currentUser";
 import { validateRequest } from "../middlewares/validateRequest";
 
+import { upload } from "../middlewares/multer";
+
 const instructorController = new InstructorController();
 const router = Router();
 
@@ -38,4 +40,9 @@ router.get(
   instructorController.getAllCategories
 );
 
+router.post(
+  "/create-module",
+  upload.single("file"),
+  instructorController.createModule
+);
 export default router;

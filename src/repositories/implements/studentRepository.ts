@@ -55,8 +55,8 @@ export class StudentRepository implements IStudnetRepository {
     return await student.save();
   }
 
-  async updateStudent(studentDetails: IStudent): Promise<IStudent> {
-    const { id, firstname, lastname, mobile } = studentDetails;
+  async updateStudentName(studentDetails: IStudent): Promise<IStudent> {
+    const { id, firstname, lastname } = studentDetails;
     const student = await Student.findById(id);
     if (!student) {
       throw new BadRequestError("Student not found");
@@ -64,7 +64,6 @@ export class StudentRepository implements IStudnetRepository {
     student.set({
       firstname,
       lastname,
-      mobile,
     });
     return await student.save();
   }

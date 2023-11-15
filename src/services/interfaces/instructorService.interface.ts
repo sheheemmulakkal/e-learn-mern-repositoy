@@ -3,6 +3,7 @@ import { ICourse } from "../../common/types/course";
 import { ICategory } from "../../common/types/category";
 import { ILevel } from "../../common/types/level";
 import { ILanguage } from "../../common/types/language";
+import { IModule } from "../../common/types/module";
 
 export interface Categories {
   categories: ICategory[] | null;
@@ -19,4 +20,12 @@ export interface IInstructorService {
   updateCourse(courseDeatils: ICourse): Promise<ICourse>;
   deleteCourse(courseId: string): Promise<ICourse>;
   getAllCategories(): Promise<Categories>;
+  createModule(
+    moduleDetails: IModule,
+    order: number,
+    file: Express.Multer.File
+  ): Promise<IModule>;
+  // updateModule(moduleDetails: IModule): Promise<IModule>;
+  // listModule(moduleDetails: IModule): Promise<IModule>;
+  // unlistModule(moduleDetails: IModule): Promise<IModule>;
 }

@@ -198,12 +198,11 @@ export class StudentController {
   async udateProfile(req: Request, res: Response, next: NextFunction) {
     try {
       const id = req.currentUser;
-      const { firstname, lastname, mobile } = req.body;
-      const student = await studentService.updateStudent({
+      const { firstname, lastname } = req.body;
+      const student = await studentService.updateStudentName({
         id,
         firstname,
         lastname,
-        mobile,
       });
       res.status(200).json(student);
     } catch (error) {
@@ -224,12 +223,8 @@ export class StudentController {
         throw new BadRequestError("Image not found");
       }
       const student = await studentService.updateProfileImage(id!, file);
-      console.log(student);
-
       res.status(200).json(student);
     } catch (error) {
-      console.log(error);
-
       if (error instanceof Error) {
         return next(error);
       }

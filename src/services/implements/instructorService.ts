@@ -9,6 +9,12 @@ import { BadRequestError } from "../../common/errors/badRequestError";
 import { NotFoundError } from "../../common/errors/notFoundError";
 import { ICourse } from "../../common/types/course";
 import { Categories } from "../interfaces/instructorService.interface";
+import { IModule } from "../../common/types/module";
+import s3 from "../../../config/aws.config";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { ModuleRepository } from "../../repositories/implements/moduleRepository";
+import getVideoDuration from "get-video-duration";
+import { secondsToHMS } from "../../utils/timeConvertor";
 
 export class InstructorSerivce implements IInstructorService {
   private instructorRepository: InstructorRepository;
@@ -16,12 +22,14 @@ export class InstructorSerivce implements IInstructorService {
   private categoryRepository: CategoryRepository;
   private levelRepostory: LevelRepository;
   private languageRepository: LanguageRepostory;
+  private moduleRepository: ModuleRepository;
   constructor() {
     this.instructorRepository = new InstructorRepository();
     this.courseRepository = new CourseRepository();
     this.categoryRepository = new CategoryRepository();
     this.levelRepostory = new LevelRepository();
     this.languageRepository = new LanguageRepostory();
+    this.moduleRepository = new ModuleRepository();
   }
   async signup(instructorDetails: IInstructor): Promise<IInstructor> {
     const existingInstructor =
@@ -74,5 +82,44 @@ export class InstructorSerivce implements IInstructorService {
       languages,
     };
     return result;
+  }
+  async createModule(
+    moduleDetails: IModule,
+    order: number,
+    file: Express.Multer.File
+  ): Promise<IModule> {
+    try {
+      const { name, description, courseId } = moduleDetails;
+
+      const key = `courses/${name}/${file.originalname}`;
+      const params = {
+        Bucket: "eduvistabucket-aws",
+        Key: key,
+        Body: file.buffer,
+        ContentType: file.mimetype,
+      };
+      const filePath = `https://${params.Bucket}.s3.${process.env.AWS_S3_REGION}.amazonaws.com/${params.Key}`;
+      await s3.send(new PutObjectCommand(params));
+      const duration = await getVideoDuration(filePath);
+      const durationHMS = secondsToHMS(duration);
+      const module = {
+        name,
+        description,
+        courseId,
+        module: filePath,
+        duration: durationHMS,
+      };
+      const createModule = await this.moduleRepository.createModule(module);
+      await this.courseRepository.addModule(courseId!, {
+        module: createModule.id!,
+        order,
+      });
+
+      return createModule;
+    } catch (error) {
+      console.log(error);
+
+      throw new BadRequestError("Error in upload video");
+    }
   }
 }

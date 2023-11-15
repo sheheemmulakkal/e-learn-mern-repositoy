@@ -9,6 +9,6 @@ export interface IStudnetRepository {
   blockStudent(studentId: string): Promise<IStudent | null>;
   unblockStudent(studentId: string): Promise<IStudent | null>;
   udpatePassword(studentId: string, password: string): Promise<IStudent | null>;
-  updateStudent(studentDetails: IStudent): Promise<IStudent>;
+  updateStudentName(studentDetails: IStudent): Promise<IStudent>;
   updateImage(studentId: string, image: string): Promise<IStudent>;
 }

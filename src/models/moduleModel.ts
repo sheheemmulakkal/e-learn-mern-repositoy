@@ -8,6 +8,7 @@ interface ModuleModel extends Model<IModule> {
 interface ModuleDoc extends Document {
   id?: string;
   name?: string;
+  courseId?: string;
   module?: string;
   description?: string;
   duration?: string;
@@ -19,6 +20,10 @@ const moduleSchema = new mongoose.Schema(
   {
     name: {
       type: String,
+      required: true,
+    },
+    courseId: {
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
     module: {

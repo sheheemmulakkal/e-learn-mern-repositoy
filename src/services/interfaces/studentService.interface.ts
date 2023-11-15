@@ -7,7 +7,7 @@ export interface IStudentService {
   getCourses(): Promise<ICourse[] | null>;
   updatePassword(studentId: string, password: string): Promise<IStudent>;
   findStudentById(studentId: string): Promise<IStudent>;
-  updateStudent(studentDetails: IStudent): Promise<IStudent>;
+  updateStudentName(studentDetails: IStudent): Promise<IStudent>;
   updateProfileImage(
     studentId: string,
     file: Express.Multer.File
