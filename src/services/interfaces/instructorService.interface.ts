@@ -18,6 +18,7 @@ export interface IInstructorService {
   getMyCourses(instructorId: string): Promise<ICourse[] | null>;
   createCourse(courseDeatils: ICourse): Promise<ICourse>;
   updateCourse(courseDeatils: ICourse): Promise<ICourse>;
+  addCourseImage(courseId: string, file: Express.Multer.File): Promise<ICourse>;
   deleteCourse(courseId: string): Promise<ICourse>;
   getAllCategories(): Promise<Categories>;
   createModule(

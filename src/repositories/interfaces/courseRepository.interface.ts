@@ -16,4 +16,5 @@ export interface ICourseRepository {
   listCourse(courseId: string): Promise<ICourse>;
   unlistCourse(courseId: string): Promise<ICourse>;
   getListedCourses(): Promise<ICourse[] | null>;
+  addCourseImage(courseId: string, image: string): Promise<ICourse>;
 }

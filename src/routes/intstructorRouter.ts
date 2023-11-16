@@ -19,7 +19,11 @@ router.post("/resend-otp", instructorController.resendOtp);
 router.post("/verify-otp", instructorController.VerifyInstructor);
 router.post("/login", instructorController.login);
 router.get("/my-courses", isInstructorAuth, instructorController.getMycourses);
-router.get("/course", isInstructorAuth, instructorController.getSingleCourse);
+router.get(
+  "/course/:courseId",
+  isInstructorAuth,
+  instructorController.getSingleCourse
+);
 router.post(
   "/course",
   isInstructorAuth,
@@ -33,16 +37,19 @@ router.patch(
   isInstructorAuth,
   instructorController.deleteCourse
 );
-
 router.get(
   "/all-categories",
   isInstructorAuth,
   instructorController.getAllCategories
 );
-
 router.post(
   "/create-module",
   upload.single("file"),
   instructorController.createModule
+);
+router.put(
+  "/add-course-image",
+  upload.single("image"),
+  instructorController.updateCourseImage
 );
 export default router;

@@ -27,7 +27,15 @@ export class CourseRepository implements ICourseRepository {
   async getSingleCourseForInstructor(
     courseId: string
   ): Promise<ICourse | null> {
-    return await Course.findById(courseId);
+    return await Course.findById(courseId)
+      .populate("instructor")
+      .populate("level")
+      .populate("category")
+      .populate("language")
+      .populate({
+        path: "modules.module",
+        model: "module",
+      });
   }
 
   async getCoursesByApproval(
@@ -116,5 +124,13 @@ export class CourseRepository implements ICourseRepository {
       .populate("category")
       .populate("level")
       .populate("language");
+  }
+
+  async addCourseImage(courseId: string, image: string): Promise<ICourse> {
+    const course = await Course.findById(courseId);
+    course!.set({
+      image,
+    });
+    return await course!.save();
   }
 }

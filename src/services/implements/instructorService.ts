@@ -122,4 +122,29 @@ export class InstructorSerivce implements IInstructorService {
       throw new BadRequestError("Error in upload video");
     }
   }
+  async addCourseImage(
+    courseId: string,
+    file: Express.Multer.File
+  ): Promise<ICourse> {
+    const course = await this.courseRepository.findCourseById(courseId);
+    if (!course) {
+      throw new BadRequestError("Course not found");
+    }
+    const sanitizedCourseName = course.name!.replace(/\s/g, "_"); // Replace spaces with underscores or any character
+    const sanitizedFileName = encodeURIComponent(file.originalname);
+
+    const key = `courses/${sanitizedCourseName}/image/${sanitizedFileName}`;
+
+    const params = {
+      Bucket: "eduvistabucket-aws",
+      Key: key,
+      Body: file.buffer,
+      ContentType: file.mimetype,
+    };
+    const filePath = `https://${params.Bucket}.s3.${process.env.AWS_S3_REGION}.amazonaws.com/${params.Key}`;
+    console.log(filePath);
+
+    await s3.send(new PutObjectCommand(params));
+    return await this.courseRepository.addCourseImage(courseId, filePath);
+  }
 }

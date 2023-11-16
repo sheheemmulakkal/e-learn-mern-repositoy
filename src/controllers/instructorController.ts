@@ -171,7 +171,7 @@ export class InstructorController {
 
   async getSingleCourse(req: Request, res: Response, next: NextFunction) {
     try {
-      const { courseId } = req.body;
+      const { courseId } = req.params;
       if (!courseId) {
         throw new BadRequestError("Course id not found");
       }
@@ -234,14 +234,34 @@ export class InstructorController {
 
   async createModule(req: Request, res: Response, next: NextFunction) {
     try {
-      const { name, description, courseId, order } = req.body;
+      const { name, description, courseId } = req.body;
       const file = req.file;
-      const module = await instructorService.createModule(
+      const existingModule = await instructorService.getSingleCourse(courseId);
+      const order = (existingModule?.modules?.length || 0) + 1;
+      await instructorService.createModule(
         { name, description, courseId },
         order,
         file!
       );
-      res.status(200).json({ message: "success", module });
+      const course = await instructorService.getSingleCourse(courseId);
+      res.status(200).json(course);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async updateCourseImage(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { courseId } = req.body;
+      const file = req.file;
+      if (!file) {
+        throw new BadRequestError("file not found");
+      }
+      await instructorService.addCourseImage(courseId, file);
+      const course = await instructorService.getSingleCourse(courseId);
+      res.status(200).json(course);
     } catch (error) {
       if (error instanceof Error) {
         next(error);
