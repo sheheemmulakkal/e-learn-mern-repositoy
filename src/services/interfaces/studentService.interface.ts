@@ -1,4 +1,5 @@
 import { ICourse } from "../../common/types/course";
+import { ISearch } from "../../common/types/searchCourse";
 import { IStudent } from "../../common/types/student";
 export interface IStudentService {
   signup(studentDetails: IStudent): Promise<IStudent>;
@@ -13,4 +14,5 @@ export interface IStudentService {
     file: Express.Multer.File
   ): Promise<IStudent>;
   getSingleCourse(courseId: string): Promise<ICourse>;
+  searchCourse(details: ISearch): Promise<ICourse[] | null>;
 }

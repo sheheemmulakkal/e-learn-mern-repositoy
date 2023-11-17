@@ -7,6 +7,7 @@ import { IStudent } from "../common/types/student";
 import { BadRequestError } from "../common/errors/badRequestError";
 import { ForbiddenError } from "../common/errors/forbiddenError";
 import { NotAuthorizedError } from "../common/errors/notAuthorizedError";
+import { ISearch } from "../common/types/searchCourse";
 
 const studentService = new StudentService();
 const otpService = new OtpService();
@@ -235,6 +236,35 @@ export class StudentController {
     try {
       const { courseId } = req.params;
       const course = await studentService.getSingleCourse(courseId);
+      res.status(200).json(course);
+    } catch (error) {
+      if (error instanceof Error) {
+        return next(error);
+      }
+    }
+  }
+
+  async searchCourses(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { search, category, level, language } = req.query;
+      const inputs: ISearch = {};
+
+      if (search) {
+        inputs.$or = [
+          { name: { $regex: search as string, $options: "i" } },
+          { description: { $regex: search as string, $options: "i" } },
+        ];
+      }
+      if (category) {
+        inputs.category = category as string;
+      }
+      if (level) {
+        inputs.level = level as string;
+      }
+      if (language) {
+        inputs.language = language as string;
+      }
+      const course = await studentService.searchCourse(inputs);
       res.status(200).json(course);
     } catch (error) {
       if (error instanceof Error) {

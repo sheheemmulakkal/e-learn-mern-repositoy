@@ -33,4 +33,5 @@ router.put(
   studentController.udateProfileImage
 );
 router.get("/course/:courseId", studentController.getSingleCourse);
+router.get("/search-course", studentController.searchCourses);
 export default router;

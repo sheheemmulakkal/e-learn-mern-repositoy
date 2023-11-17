@@ -1,4 +1,5 @@
 import { CourseApproval, ICourse } from "../../common/types/course";
+import { ISearch } from "../../common/types/searchCourse";
 
 export interface ICourseRepository {
   createCourse(courseDeatils: ICourse): Promise<ICourse>;
@@ -18,4 +19,5 @@ export interface ICourseRepository {
   getListedCourses(): Promise<ICourse[] | null>;
   addCourseImage(courseId: string, image: string): Promise<ICourse>;
   getSingleCourseForAdmin(courseId: string): Promise<ICourse | null>;
+  searchCoursesForStudents(details: ISearch): Promise<ICourse[] | null>;
 }

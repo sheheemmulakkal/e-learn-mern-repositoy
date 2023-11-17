@@ -3,6 +3,7 @@ import { ICourse } from "../../common/types/course";
 import { CourseApproval } from "../../common/types/course";
 import { ICourseRepository } from "../interfaces/courseRepository.interface";
 import { NotFoundError } from "../../common/errors/notFoundError";
+import { ISearch } from "../../common/types/searchCourse";
 
 export class CourseRepository implements ICourseRepository {
   async createCourse(courseDeatils: ICourse): Promise<ICourse> {
@@ -143,6 +144,11 @@ export class CourseRepository implements ICourseRepository {
         path: "modules.module",
         model: "module",
       });
+    return course;
+  }
+
+  async searchCoursesForStudents(details: ISearch): Promise<ICourse[] | null> {
+    const course = await Course.find({ status: true, ...details });
     return course;
   }
 }

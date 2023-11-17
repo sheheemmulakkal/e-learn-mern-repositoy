@@ -7,6 +7,7 @@ import { ICourse } from "../../common/types/course";
 import { CourseRepository } from "../../repositories/implements/courseRepository";
 import s3 from "../../../config/aws.config";
 import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { ISearch } from "../../common/types/searchCourse";
 
 export class StudentService implements IStudentService {
   private studentRepository: StudentRepository;
@@ -92,6 +93,13 @@ export class StudentService implements IStudentService {
     if (!course) {
       throw new NotFoundError("Course not found");
     }
+    return course;
+  }
+
+  async searchCourse(details: ISearch): Promise<ICourse[] | null> {
+    const course = await this.courseRepository.searchCoursesForStudents(
+      details
+    );
     return course;
   }
 }
