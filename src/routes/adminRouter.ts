@@ -38,6 +38,7 @@ router.patch("/unlist-language", isAdminAuth, adminController.unlistLanguage);
 router.get("/courses", isAdminAuth, adminController.getAllCourses);
 router.get("/pending-course", isAdminAuth, adminController.getPendingCourses);
 router.get("/rejected-course", isAdminAuth, adminController.getRejectedCourses);
+router.get("/course/:courseId", isAdminAuth, adminController.getSingleCourse);
 router.get("/approved-course", isAdminAuth, adminController.getApprovedCourses);
 router.patch("/list-course", isAdminAuth, adminController.listCourse);
 router.patch("/unlist-course", isAdminAuth, adminController.unlistCourse);

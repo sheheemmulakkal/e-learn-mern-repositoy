@@ -40,4 +40,5 @@ export interface IAdminService {
   courseApproval(courseId: string, approval: CourseApproval): Promise<ICourse>;
   unlistCourse(courseId: string): Promise<ICourse>;
   listCourse(courseId: string): Promise<ICourse>;
+  getSingleCourse(courseId: string): Promise<ICourse>;
 }

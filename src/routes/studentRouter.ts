@@ -32,5 +32,5 @@ router.put(
   upload.single("image"),
   studentController.udateProfileImage
 );
-
+router.get("/course/:courseId", studentController.getSingleCourse);
 export default router;

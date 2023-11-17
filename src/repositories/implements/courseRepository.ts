@@ -133,4 +133,16 @@ export class CourseRepository implements ICourseRepository {
     });
     return await course!.save();
   }
+  async getSingleCourseForAdmin(courseId: string): Promise<ICourse | null> {
+    const course = await Course.findById(courseId)
+      .populate("instructor")
+      .populate("level")
+      .populate("category")
+      .populate("language")
+      .populate({
+        path: "modules.module",
+        model: "module",
+      });
+    return course;
+  }
 }

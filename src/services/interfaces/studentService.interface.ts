@@ -12,4 +12,5 @@ export interface IStudentService {
     studentId: string,
     file: Express.Multer.File
   ): Promise<IStudent>;
+  getSingleCourse(courseId: string): Promise<ICourse>;
 }

@@ -341,6 +341,20 @@ export class AdminController {
     }
   }
 
+  async getSingleCourse(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { courseId } = req.params;
+      const course = await adminService.getSingleCourse(courseId);
+      console.log(course);
+
+      res.status(200).json(course);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
   async getRejectedCourses(req: Request, res: Response, next: NextFunction) {
     try {
       const rejectedCourses = await adminService.getCoursesByApproval(

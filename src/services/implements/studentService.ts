@@ -84,4 +84,14 @@ export class StudentService implements IStudentService {
   async updateStudentName(studentDetails: IStudent): Promise<IStudent> {
     return await this.studentRepository.updateStudentName(studentDetails);
   }
+
+  async getSingleCourse(courseId: string): Promise<ICourse> {
+    const course = await this.courseRepository.getSingleCourseForInstructor(
+      courseId
+    );
+    if (!course) {
+      throw new NotFoundError("Course not found");
+    }
+    return course;
+  }
 }

@@ -167,4 +167,13 @@ export class AdminService implements IAdminService {
   async unlistCourse(courseId: string): Promise<ICourse> {
     return await this.courseRepository.unlistCourse(courseId);
   }
+  async getSingleCourse(courseId: string): Promise<ICourse> {
+    const course = await this.courseRepository.getSingleCourseForAdmin(
+      courseId
+    );
+    if (!course) {
+      throw new BadRequestError("Course not found");
+    }
+    return course;
+  }
 }
