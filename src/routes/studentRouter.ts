@@ -25,7 +25,7 @@ router.patch(
   isStudentAuth,
   studentController.updatePassword
 );
-router.put("/update-profile");
+router.put("/update-profile", isStudentAuth, studentController.udateProfile);
 router.put(
   "/update-profile-image",
   isStudentAuth,
