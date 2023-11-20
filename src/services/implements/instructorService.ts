@@ -147,4 +147,20 @@ export class InstructorSerivce implements IInstructorService {
     await s3.send(new PutObjectCommand(params));
     return await this.courseRepository.addCourseImage(courseId, filePath);
   }
+
+  async resetForgotPassword(
+    email: string,
+    password: string
+  ): Promise<IInstructor> {
+    const instructor = await this.instructorRepository.findInstructorByEmail(
+      email
+    );
+    if (!instructor) {
+      throw new BadRequestError("Instructor not found");
+    }
+    return await this.instructorRepository.updatePassword(
+      instructor.id!,
+      password
+    );
+  }
 }

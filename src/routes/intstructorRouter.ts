@@ -52,4 +52,9 @@ router.put(
   upload.single("image"),
   instructorController.updateCourseImage
 );
+router.post(
+  "/verify-forgot-password-otp",
+  instructorController.forgotPasswordOtpVerification
+);
+router.post("/forgot-password", instructorController.resetForgottedPassword);
 export default router;

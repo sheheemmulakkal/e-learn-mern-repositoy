@@ -1,6 +1,7 @@
 import { IInstructorRepository } from "../interfaces/instructorRepository.interface";
 import { IInstructor } from "../../common/types/instructor";
 import { Instructor } from "../../models/instructorModel";
+import { BadRequestError } from "../../common/errors/badRequestError";
 
 export class InstructorRepository implements IInstructorRepository {
   async createInstructor(instructorDetails: IInstructor): Promise<IInstructor> {
@@ -32,5 +33,19 @@ export class InstructorRepository implements IInstructorRepository {
     const instructor = await Instructor.findOne({ _id: instructorId });
     instructor!.set({ isBlocked: false });
     return await instructor!.save();
+  }
+
+  async updatePassword(
+    instructorId: string,
+    password: string
+  ): Promise<IInstructor> {
+    const instructor = await Instructor.findById(instructorId);
+    if (!instructor) {
+      throw new BadRequestError("Id not valid");
+    }
+    instructor.set({
+      password,
+    });
+    return await instructor.save();
   }
 }

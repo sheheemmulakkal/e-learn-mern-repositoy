@@ -268,4 +268,46 @@ export class InstructorController {
       }
     }
   }
+
+  async forgotPasswordOtpVerification(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { otp, email } = req.body;
+      console.log(otp, email);
+
+      const savedOtp = await otpService.findOtp(email);
+      if (savedOtp?.otp === otp) {
+        res.status(200).json({ success: true });
+      } else {
+        res.status(200).json({ success: false });
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        return next(error);
+      }
+    }
+  }
+
+  async resetForgottedPassword(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const { email, password } = req.body;
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const instructor = await instructorService.resetForgotPassword(
+        email,
+        hashedPassword
+      );
+      res.status(200).json(instructor);
+    } catch (error) {
+      if (error instanceof Error) {
+        return next(error);
+      }
+    }
+  }
 }

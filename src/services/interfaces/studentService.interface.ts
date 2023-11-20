@@ -15,4 +15,5 @@ export interface IStudentService {
   ): Promise<IStudent>;
   getSingleCourse(courseId: string): Promise<ICourse>;
   searchCourse(details: ISearch): Promise<ICourse[] | null>;
+  resetForgotPassword(email: string, password: string): Promise<IStudent>;
 }

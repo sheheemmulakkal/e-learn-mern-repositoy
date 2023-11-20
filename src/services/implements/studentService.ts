@@ -102,4 +102,15 @@ export class StudentService implements IStudentService {
     );
     return course;
   }
+
+  async resetForgotPassword(
+    email: string,
+    password: string
+  ): Promise<IStudent> {
+    const student = await this.studentRepository.findStudentByEmail(email);
+    if (!student) {
+      throw new BadRequestError("Student not found");
+    }
+    return await this.studentRepository.udpatePassword(student.id!, password);
+  }
 }

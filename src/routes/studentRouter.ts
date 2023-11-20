@@ -34,4 +34,10 @@ router.put(
 );
 router.get("/course/:courseId", studentController.getSingleCourse);
 router.get("/search-course", studentController.searchCourses);
+router.post(
+  "/verify-forgot-password-otp",
+  studentController.forgotPasswordOtpVerification
+);
+router.post("/forgot-password", studentController.resetForgottedPassword);
+
 export default router;
