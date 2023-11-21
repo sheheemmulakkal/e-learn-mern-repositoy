@@ -162,7 +162,6 @@ export class AdminController {
       res.status(200).json({ category: updatedCaetgory });
     } catch (error) {
       if (error instanceof Error) {
-        console.log(error.message);
         next(error);
       }
     }

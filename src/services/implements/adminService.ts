@@ -75,6 +75,10 @@ export class AdminService implements IAdminService {
     }
   }
   async editCategory(categoryId: string, data: string): Promise<ICategory> {
+    const isExist = await this.categoryRepository.findCategoryByName(data);
+    if (isExist) {
+      throw new BadRequestError("Category already exist");
+    }
     const existingCategory = await this.categoryRepository.findCategoryById(
       categoryId
     );
