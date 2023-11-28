@@ -1,80 +1,47 @@
 import mongoose, { Model, Document } from "mongoose";
 import { IEnrolledCourse } from "../common/types/enrolledCourse";
 
-interface CourseModel extends Model<IEnrolledCourse> {
-  build(attrs: IEnrolledCourse): CourseDoc;
+interface EnrolledCourseModel extends Model<IEnrolledCourse> {
+  build(attrs: IEnrolledCourse): EnrolledCourseDoc;
 }
 
-interface CourseDoc extends Document {
+interface EnrolledCourseDoc extends Document {
   id?: string;
   courseId?: string;
   price?: number;
-  date?: string;
+  date?: Date;
   status?: boolean;
-  userId?: string;
+  studentId?: string;
+  progression?: string[];
 }
 
 const enrolledCourseSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: true,
-    },
-    description: {
-      type: String,
-      required: true,
-    },
-    instructor: {
+    courseId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "instructor",
+      required: true,
+    },
+    studentId: {
+      type: mongoose.Schema.Types.ObjectId,
       required: true,
     },
     price: {
-      type: Number,
+      number: Number,
       required: true,
     },
-    image: {
-      type: String,
-    },
-    level: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "level",
-      required: true,
-    },
-    category: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "category",
-      required: true,
-    },
-    language: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "language",
-      required: true,
-    },
-    modules: [
-      {
-        module: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "module",
-        },
-        order: {
-          type: Number,
-        },
-      },
-    ],
-    createdAt: {
+    date: {
       type: Date,
-      default: Date.now,
-    },
-    approval: {
-      type: String,
-      enum: ["pending", "rejected", "approved"],
-      default: "pending",
+      required: true,
     },
     status: {
       type: Boolean,
       default: true,
     },
+    progression: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+      },
+    ],
   },
   {
     toJSON: {
@@ -87,12 +54,12 @@ const enrolledCourseSchema = new mongoose.Schema(
 );
 
 enrolledCourseSchema.statics.build = (enrolledCourse: IEnrolledCourse) => {
-  return new Course(enrolledCourse);
+  return new EnrolledCourse(enrolledCourse);
 };
 
-const Course = mongoose.model<CourseDoc, CourseModel>(
+const EnrolledCourse = mongoose.model<EnrolledCourseDoc, EnrolledCourseModel>(
   "enrolledCourse",
   enrolledCourseSchema
 );
 
-export { Course };
+export { EnrolledCourse };

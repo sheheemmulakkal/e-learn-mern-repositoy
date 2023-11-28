@@ -40,4 +40,6 @@ router.post(
 );
 router.post("/forgot-password", studentController.resetForgottedPassword);
 router.post("/create-payment-intent", studentController.stripePaymentIntent);
+router.post("/create-payment", isStudentAuth, studentController.enrollCourse);
+
 export default router;

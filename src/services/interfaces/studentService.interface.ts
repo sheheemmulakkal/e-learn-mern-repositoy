@@ -1,4 +1,5 @@
 import { ICourse } from "../../common/types/course";
+import { IEnrolledCourse } from "../../common/types/enrolledCourse";
 import { ISearch } from "../../common/types/searchCourse";
 import { IStudent } from "../../common/types/student";
 export interface IStudentService {
@@ -17,4 +18,5 @@ export interface IStudentService {
   searchCourse(details: ISearch): Promise<ICourse[] | null>;
   resetForgotPassword(email: string, password: string): Promise<IStudent>;
   stripePayment(courseId: string): Promise<string>;
+  enrollCourse(courseId: string, studentId: string): Promise<IEnrolledCourse>;
 }

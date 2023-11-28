@@ -2,7 +2,8 @@ export interface IEnrolledCourse {
   id?: string;
   courseId?: string;
   price?: number;
-  date?: string;
+  date?: Date;
   status?: boolean;
-  userId?: string;
+  studentId?: string;
+  progression?: string[];
 }

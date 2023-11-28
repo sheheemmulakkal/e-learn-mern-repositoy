@@ -1,13 +1,15 @@
-import { StudentRepository } from "../../repositories/implements/studentRepository";
-import { IStudent } from "../../common/types/student";
 import { IStudentService } from "../interfaces/studentService.interface";
 import { BadRequestError } from "../../common/errors/badRequestError";
 import { NotFoundError } from "../../common/errors/notFoundError";
 import { ICourse } from "../../common/types/course";
+import { IStudent } from "../../common/types/student";
+import { ISearch } from "../../common/types/searchCourse";
+import { IEnrolledCourse } from "../../common/types/enrolledCourse";
+import { StudentRepository } from "../../repositories/implements/studentRepository";
 import { CourseRepository } from "../../repositories/implements/courseRepository";
+import { EnrolledCourseRepository } from "../../repositories/implements/enrolledCourseRepository";
 import s3 from "../../../config/aws.config";
 import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
-import { ISearch } from "../../common/types/searchCourse";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.STRIPE_KEY!);
@@ -15,10 +17,12 @@ const stripe = new Stripe(process.env.STRIPE_KEY!);
 export class StudentService implements IStudentService {
   private studentRepository: StudentRepository;
   private courseRepository: CourseRepository;
+  private enrolledCourseRepository: EnrolledCourseRepository;
 
   constructor() {
     this.studentRepository = new StudentRepository();
     this.courseRepository = new CourseRepository();
+    this.enrolledCourseRepository = new EnrolledCourseRepository();
   }
 
   async signup(studentDetails: IStudent): Promise<IStudent> {
@@ -142,5 +146,17 @@ export class StudentService implements IStudentService {
     });
 
     return payment.url!;
+  }
+  async enrollCourse(
+    courseId: string,
+    studentId: string
+  ): Promise<IEnrolledCourse> {
+    const course = await this.courseRepository.findCourseById(courseId);
+    const courseDetails = {
+      courseId,
+      studentId,
+      price: course?.price,
+    };
+    return await this.enrolledCourseRepository.createCourse(courseDetails);
   }
 }

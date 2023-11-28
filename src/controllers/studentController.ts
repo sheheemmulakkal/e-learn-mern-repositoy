@@ -319,7 +319,20 @@ export class StudentController {
     try {
       const { courseId } = req.body;
       const url = await studentService.stripePayment(courseId);
-      res.status(201).json({ url });
+      res.status(200).json({ url });
+    } catch (error) {
+      if (error instanceof Error) {
+        return next(error);
+      }
+    }
+  }
+
+  async enrollCourse(req: Request, res: Response, next: NextFunction) {
+    try {
+      const id = req.currentUser;
+      const { courseId } = req.body;
+      const enrolledCourse = await studentService.enrollCourse(id!, courseId);
+      res.status(201).json(enrolledCourse);
     } catch (error) {
       if (error instanceof Error) {
         return next(error);
