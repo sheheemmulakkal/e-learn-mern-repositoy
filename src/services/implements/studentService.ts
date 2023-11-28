@@ -8,6 +8,9 @@ import { CourseRepository } from "../../repositories/implements/courseRepository
 import s3 from "../../../config/aws.config";
 import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import { ISearch } from "../../common/types/searchCourse";
+import Stripe from "stripe";
+
+const stripe = new Stripe(process.env.STRIPE_KEY!);
 
 export class StudentService implements IStudentService {
   private studentRepository: StudentRepository;
@@ -112,5 +115,32 @@ export class StudentService implements IStudentService {
       throw new BadRequestError("Student not found");
     }
     return await this.studentRepository.udpatePassword(student.id!, password);
+  }
+
+  async stripePayment(courseId: string): Promise<string> {
+    const course = await this.courseRepository.findCourseById(courseId);
+    if (!course) {
+      throw new BadRequestError("Course not found");
+    }
+    const payment = await stripe.checkout.sessions.create({
+      payment_method_types: ["card"],
+      mode: "payment",
+      line_items: [
+        {
+          price_data: {
+            currency: "inr",
+            product_data: {
+              name: course.name as string,
+            },
+            unit_amount: course.price! * 100,
+          },
+          quantity: 1,
+        },
+      ],
+      success_url: `${process.env.CLIENT_URL}/status/success`,
+      cancel_url: `${process.env.CLIENT_URL}/status/cancel`,
+    });
+
+    return payment.url!;
   }
 }

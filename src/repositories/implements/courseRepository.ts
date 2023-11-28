@@ -148,7 +148,7 @@ export class CourseRepository implements ICourseRepository {
   }
 
   async searchCoursesForStudents(details: ISearch): Promise<ICourse[] | null> {
-    const course = await Course.find({ status: true, ...details });
+    const course = await Course.find({ approval: "approved", ...details });
     return course;
   }
 }

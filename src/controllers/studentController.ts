@@ -314,4 +314,16 @@ export class StudentController {
       }
     }
   }
+
+  async stripePaymentIntent(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { courseId } = req.body;
+      const url = await studentService.stripePayment(courseId);
+      res.status(201).json({ url });
+    } catch (error) {
+      if (error instanceof Error) {
+        return next(error);
+      }
+    }
+  }
 }

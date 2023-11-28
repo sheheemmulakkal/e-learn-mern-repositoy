@@ -39,5 +39,5 @@ router.post(
   studentController.forgotPasswordOtpVerification
 );
 router.post("/forgot-password", studentController.resetForgottedPassword);
-
+router.post("/create-payment-intent", studentController.stripePaymentIntent);
 export default router;
