@@ -46,7 +46,9 @@ export class CourseRepository implements ICourseRepository {
   }
 
   async findCourseById(courseId: string): Promise<ICourse | null> {
-    const course = Course.findById(courseId);
+    console.log(courseId, "id respo");
+
+    const course = await Course.findById(courseId);
     if (!course) {
       throw new NotFoundError("Course not found");
     }

@@ -11,4 +11,5 @@ export interface IStudnetRepository {
   udpatePassword(studentId: string, password: string): Promise<IStudent | null>;
   updateStudentName(studentDetails: IStudent): Promise<IStudent>;
   updateImage(studentId: string, image: string): Promise<IStudent>;
+  courseEnroll(studentId: string, courseId: string): Promise<IStudent>;
 }

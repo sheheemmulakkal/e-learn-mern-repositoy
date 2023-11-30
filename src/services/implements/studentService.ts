@@ -121,8 +121,16 @@ export class StudentService implements IStudentService {
     return await this.studentRepository.udpatePassword(student.id!, password);
   }
 
-  async stripePayment(courseId: string): Promise<string> {
+  async stripePayment(courseId: string, studentId: string): Promise<string> {
     const course = await this.courseRepository.findCourseById(courseId);
+    const existingEnrollment =
+      await this.enrolledCourseRepository.checkEnrolledCourse(
+        courseId,
+        studentId
+      );
+    if (existingEnrollment) {
+      throw new BadRequestError("Already enrolled");
+    }
     if (!course) {
       throw new BadRequestError("Course not found");
     }
@@ -141,8 +149,8 @@ export class StudentService implements IStudentService {
           quantity: 1,
         },
       ],
-      success_url: `${process.env.CLIENT_URL}/status/success`,
-      cancel_url: `${process.env.CLIENT_URL}/status/cancel`,
+      success_url: `${process.env.CLIENT_URL}/status?success=true&courseId=${courseId}`,
+      cancel_url: `${process.env.CLIENT_URL}/status`,
     });
 
     return payment.url!;
@@ -151,7 +159,16 @@ export class StudentService implements IStudentService {
     courseId: string,
     studentId: string
   ): Promise<IEnrolledCourse> {
+    const existingEnrollment =
+      await this.enrolledCourseRepository.checkEnrolledCourse(
+        courseId,
+        studentId
+      );
+    if (existingEnrollment) {
+      throw new BadRequestError("Course already enrolled");
+    }
     const course = await this.courseRepository.findCourseById(courseId);
+    await this.studentRepository.courseEnroll(studentId, courseId);
     const courseDetails = {
       courseId,
       studentId,

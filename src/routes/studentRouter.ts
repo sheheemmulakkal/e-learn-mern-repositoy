@@ -3,6 +3,7 @@ import { StudentController } from "../controllers/studentController";
 import { signupValidation } from "../middlewares/validations";
 import { validateRequest } from "../middlewares/validateRequest";
 import { isStudentAuth } from "../middlewares/currentUser";
+import { checkStudent } from "../middlewares/checkUser";
 
 import { upload } from "../middlewares/multer";
 
@@ -32,14 +33,22 @@ router.put(
   upload.single("image"),
   studentController.udateProfileImage
 );
-router.get("/course/:courseId", studentController.getSingleCourse);
+router.get(
+  "/course/:courseId",
+  checkStudent,
+  studentController.getSingleCourse
+);
 router.get("/search-course", studentController.searchCourses);
 router.post(
   "/verify-forgot-password-otp",
   studentController.forgotPasswordOtpVerification
 );
 router.post("/forgot-password", studentController.resetForgottedPassword);
-router.post("/create-payment-intent", studentController.stripePaymentIntent);
+router.post(
+  "/create-payment-intent",
+  isStudentAuth,
+  studentController.stripePaymentIntent
+);
 router.post("/create-payment", isStudentAuth, studentController.enrollCourse);
 
 export default router;

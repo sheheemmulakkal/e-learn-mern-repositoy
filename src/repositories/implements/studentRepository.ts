@@ -78,4 +78,13 @@ export class StudentRepository implements IStudnetRepository {
     });
     return await student.save();
   }
+
+  async courseEnroll(studentId: string, courseId: string): Promise<IStudent> {
+    const student = await Student.findById(studentId);
+    if (!student) {
+      throw new BadRequestError("Id not valid");
+    }
+    student.courses?.push(courseId);
+    return await student.save();
+  }
 }

@@ -26,12 +26,12 @@ const enrolledCourseSchema = new mongoose.Schema(
       required: true,
     },
     price: {
-      number: Number,
+      type: Number,
       required: true,
     },
     date: {
       type: Date,
-      required: true,
+      default: Date.now,
     },
     status: {
       type: Boolean,

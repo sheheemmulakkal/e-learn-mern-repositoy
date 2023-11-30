@@ -317,8 +317,9 @@ export class StudentController {
 
   async stripePaymentIntent(req: Request, res: Response, next: NextFunction) {
     try {
+      const id = req.currentUser;
       const { courseId } = req.body;
-      const url = await studentService.stripePayment(courseId);
+      const url = await studentService.stripePayment(courseId, id!);
       res.status(200).json({ url });
     } catch (error) {
       if (error instanceof Error) {
@@ -331,9 +332,11 @@ export class StudentController {
     try {
       const id = req.currentUser;
       const { courseId } = req.body;
-      const enrolledCourse = await studentService.enrollCourse(id!, courseId);
+      const enrolledCourse = await studentService.enrollCourse(courseId, id!);
       res.status(201).json(enrolledCourse);
     } catch (error) {
+      console.log(error, "eroro");
+
       if (error instanceof Error) {
         return next(error);
       }
