@@ -1,6 +1,15 @@
 // src/services/socketService.ts
 import { Server, Socket } from "socket.io";
 import { createServer } from "http";
+import { IMessage } from "../common/types/chat";
+import { ChatRepository } from "../repositories/implements/chatRepository";
+// import {ChatREpository} from "../repositories/implements/"
+const chatRepository = new ChatRepository();
+
+interface ChatMessage {
+  courseId: string;
+  message: IMessage;
+}
 
 const httpServer = createServer();
 const io = new Server(httpServer, {
@@ -33,10 +42,25 @@ io.on("connection", (socket: Socket) => {
     });
   });
 
-  socket.on("message", (data) => {
-    console.log(data, " essage");
+  socket.on("get-all-messages", async ({ courseId }) => {
+    const messages = await chatRepository.getChatByCourseId(courseId);
+    io.to(courseId).emit("get-course-response", messages?.messages);
+  });
 
-    io.to(data.courseId).emit("messageResponse", data);
+  socket.on("message", async (data: ChatMessage) => {
+    console.log(data, " essage");
+    const { courseId, message } = data;
+    const existChat = await chatRepository.getChatByCourseId(courseId);
+    if (existChat) {
+      await chatRepository.addMessage(courseId, message);
+    } else {
+      const chatDetails = {
+        courseId,
+        messages: [message],
+      };
+      await chatRepository.createChatRoom(chatDetails);
+    }
+    io.to(data.courseId!).emit("messageResponse", data);
   });
 
   // Handle disconnect event
