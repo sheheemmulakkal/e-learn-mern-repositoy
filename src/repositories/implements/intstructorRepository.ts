@@ -48,4 +48,35 @@ export class InstructorRepository implements IInstructorRepository {
     });
     return await instructor.save();
   }
+
+  async addToWallet(
+    instructorId: string,
+    amount: number
+  ): Promise<IInstructor> {
+    const instructor = await Instructor.findById(instructorId);
+    if (!instructor) {
+      throw new BadRequestError("Instructor not found");
+    }
+    instructor.set({ wallet: (instructor.wallet ?? 0) + amount });
+
+    return await instructor.save();
+  }
+
+  async addWalletHistory(
+    instructorId: string,
+    amount: number,
+    description: string
+  ): Promise<IInstructor> {
+    const instructor = await Instructor.findById(instructorId);
+    if (!instructor) {
+      throw new BadRequestError("instructor not found");
+    }
+    const walletHistoryDetails = {
+      amount,
+      description,
+      date: new Date(),
+    };
+    instructor.walletHistory?.push(walletHistoryDetails);
+    return await instructor.save();
+  }
 }

@@ -7,20 +7,25 @@ import { ISearch } from "../../common/types/searchCourse";
 import { IEnrolledCourse } from "../../common/types/enrolledCourse";
 import { StudentRepository } from "../../repositories/implements/studentRepository";
 import { CourseRepository } from "../../repositories/implements/courseRepository";
+import { InstructorRepository } from "../../repositories/implements/intstructorRepository";
 import { EnrolledCourseRepository } from "../../repositories/implements/enrolledCourseRepository";
 import s3 from "../../../config/aws.config";
 import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import Stripe from "stripe";
 
+const INSTRUCTOR_COURSE_PERCENTAGE = 70;
+
 const stripe = new Stripe(process.env.STRIPE_KEY!);
 
 export class StudentService implements IStudentService {
   private studentRepository: StudentRepository;
+  private instructorRepository: InstructorRepository;
   private courseRepository: CourseRepository;
   private enrolledCourseRepository: EnrolledCourseRepository;
 
   constructor() {
     this.studentRepository = new StudentRepository();
+    this.instructorRepository = new InstructorRepository();
     this.courseRepository = new CourseRepository();
     this.enrolledCourseRepository = new EnrolledCourseRepository();
   }
@@ -174,6 +179,27 @@ export class StudentService implements IStudentService {
       studentId,
       price: course?.price,
     };
-    return await this.enrolledCourseRepository.createCourse(courseDetails);
+
+    const enrolledCourse = await this.enrolledCourseRepository.createCourse(
+      courseDetails
+    );
+    const instructorAmount =
+      (course!.price! * INSTRUCTOR_COURSE_PERCENTAGE) / 100;
+    console.log(instructorAmount, "inst");
+
+    const description = `Enrollment fee from course ${course?.name} (ID: ${course?.id})`;
+    console.log(description, "courseDeatils");
+    if (course) {
+      await this.instructorRepository.addToWallet(
+        course.instructor!,
+        instructorAmount
+      );
+      await this.instructorRepository.addWalletHistory(
+        course.instructor!,
+        instructorAmount,
+        description
+      );
+    }
+    return enrolledCourse;
   }
 }

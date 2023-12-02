@@ -103,6 +103,7 @@ export class InstructorController {
               mobile: instructor.mobile,
               wallet: instructor.wallet,
               courses: instructor.courses,
+              walletHistory: instructor.walletHistory,
               role: "instructor",
             };
             res.status(200).json({
