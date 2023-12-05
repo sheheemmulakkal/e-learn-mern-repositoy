@@ -15,6 +15,20 @@ export class EnrolledCourseRepository implements IEnrolledCourseRepository {
     }
     return enrolledCourse;
   }
+  async getCourseByStudentIdAndCourseId(
+    studentId: string,
+    courseId: string
+  ): Promise<IEnrolledCourse | null> {
+    console.log("hi");
+
+    return await EnrolledCourse.findOne({ studentId, courseId }).populate({
+      path: "courseId",
+      populate: {
+        path: "modules.module",
+        model: "module",
+      },
+    });
+  }
   async checkEnrolledCourse(
     courseId: string,
     studentId: string

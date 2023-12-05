@@ -19,4 +19,8 @@ export interface IStudentService {
   resetForgotPassword(email: string, password: string): Promise<IStudent>;
   stripePayment(courseId: string, studentId: string): Promise<string>;
   enrollCourse(courseId: string, studentId: string): Promise<IEnrolledCourse>;
+  getEnrolledCourse(
+    courseId: string,
+    studentId: string
+  ): Promise<IEnrolledCourse | null>;
 }

@@ -50,5 +50,10 @@ router.post(
   studentController.stripePaymentIntent
 );
 router.post("/create-payment", isStudentAuth, studentController.enrollCourse);
+router.get(
+  "/get-enrolled-course",
+  isStudentAuth,
+  studentController.getEnrolledCourse
+);
 
 export default router;

@@ -26,8 +26,6 @@ io.on("connection", (socket: Socket) => {
 
   // Listen for chat messages
   socket.on("join-room", (data: { courseId: string }) => {
-    console.log(data, " data");
-
     socket.join(data.courseId);
 
     if (activeMembers.has(data.courseId)) {
@@ -44,13 +42,15 @@ io.on("connection", (socket: Socket) => {
 
   socket.on("get-all-messages", async ({ courseId }) => {
     const messages = await chatRepository.getChatByCourseId(courseId);
-    io.to(courseId).emit("get-course-response", messages?.messages);
+
+    io.to(courseId).emit("get-course-response", messages);
   });
 
   socket.on("message", async (data: ChatMessage) => {
-    console.log(data, " essage");
     const { courseId, message } = data;
+
     const existChat = await chatRepository.getChatByCourseId(courseId);
+
     if (existChat) {
       await chatRepository.addMessage(courseId, message);
     } else {

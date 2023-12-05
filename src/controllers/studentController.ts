@@ -342,4 +342,21 @@ export class StudentController {
       }
     }
   }
+
+  async getEnrolledCourse(req: Request, res: Response, next: NextFunction) {
+    try {
+      const studentId = req.currentUser;
+      const { courseId } = req.query;
+
+      const enrolledCourse = await studentService.getEnrolledCourse(
+        courseId as string,
+        studentId!
+      );
+      res.status(200).json(enrolledCourse);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
 }

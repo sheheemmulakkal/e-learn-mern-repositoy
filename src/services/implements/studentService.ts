@@ -202,4 +202,14 @@ export class StudentService implements IStudentService {
     }
     return enrolledCourse;
   }
+
+  async getEnrolledCourse(
+    courseId: string,
+    studentId: string
+  ): Promise<IEnrolledCourse | null> {
+    return await this.enrolledCourseRepository.getCourseByStudentIdAndCourseId(
+      studentId,
+      courseId
+    );
+  }
 }
