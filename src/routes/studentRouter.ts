@@ -55,5 +55,11 @@ router.get(
   isStudentAuth,
   studentController.getEnrolledCourse
 );
+router.get(
+  "/get-enrolled-courses-student",
+  isStudentAuth,
+  studentController.getEnrolledCoursesByStudent
+);
+router.get("/add-progression", isStudentAuth, studentController.addProgression);
 
 export default router;

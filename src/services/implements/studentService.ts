@@ -185,10 +185,7 @@ export class StudentService implements IStudentService {
     );
     const instructorAmount =
       (course!.price! * INSTRUCTOR_COURSE_PERCENTAGE) / 100;
-    console.log(instructorAmount, "inst");
-
     const description = `Enrollment fee from course ${course?.name} (ID: ${course?.id})`;
-    console.log(description, "courseDeatils");
     if (course) {
       await this.instructorRepository.addToWallet(
         course.instructor!,
@@ -210,6 +207,21 @@ export class StudentService implements IStudentService {
     return await this.enrolledCourseRepository.getCourseByStudentIdAndCourseId(
       studentId,
       courseId
+    );
+  }
+  async getAllEnrolledCourses(studentId: string): Promise<IEnrolledCourse[]> {
+    return await this.enrolledCourseRepository.getEnrolledCoursesByStudent(
+      studentId
+    );
+  }
+
+  async addProgression(
+    enrollmentId: string,
+    moduleId: string
+  ): Promise<IEnrolledCourse> {
+    return await this.enrolledCourseRepository.addModuleToProgression(
+      enrollmentId,
+      moduleId
     );
   }
 }

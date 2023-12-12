@@ -19,8 +19,6 @@ export class EnrolledCourseRepository implements IEnrolledCourseRepository {
     studentId: string,
     courseId: string
   ): Promise<IEnrolledCourse | null> {
-    console.log("hi");
-
     return await EnrolledCourse.findOne({ studentId, courseId }).populate({
       path: "courseId",
       populate: {
@@ -34,5 +32,42 @@ export class EnrolledCourseRepository implements IEnrolledCourseRepository {
     studentId: string
   ): Promise<IEnrolledCourse | null> {
     return await EnrolledCourse.findOne({ studentId, courseId });
+  }
+  async addModuleToProgression(
+    enrolledId: string,
+    moduleId: string
+  ): Promise<IEnrolledCourse> {
+    const course = await EnrolledCourse.findById(enrolledId);
+    if (!course) {
+      throw new BadRequestError("Enrollment not found");
+    }
+    // console.log(course);
+    // console.log(course.progression?.includes(moduleId), "result");
+
+    if (!course.progression?.includes(moduleId)) {
+      course.progression?.push(moduleId);
+    }
+    return await course.save();
+  }
+  async getEnrolledCoursesByStudent(
+    studentId: string
+  ): Promise<IEnrolledCourse[]> {
+    const enrolledCourses = await EnrolledCourse.find({ studentId }).populate({
+      path: "courseId",
+      populate: [
+        {
+          path: "modules.module",
+          model: "module",
+        },
+        { path: "level", model: "level" },
+        { path: "language", model: "language" },
+        { path: "category", model: "category" },
+      ],
+    });
+    if (!enrolledCourses) {
+      throw new BadRequestError("Enrollment not found");
+    }
+
+    return enrolledCourses;
   }
 }

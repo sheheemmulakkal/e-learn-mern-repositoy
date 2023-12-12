@@ -11,4 +11,9 @@ export interface IEnrolledCourseRepository {
     courseId: string,
     studentId: string
   ): Promise<IEnrolledCourse | null>;
+  addModuleToProgression(
+    enrolledId: string,
+    moduleId: string
+  ): Promise<IEnrolledCourse>;
+  getEnrolledCoursesByStudent(studentId: string): Promise<IEnrolledCourse[]>;
 }

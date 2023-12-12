@@ -335,8 +335,6 @@ export class StudentController {
       const enrolledCourse = await studentService.enrollCourse(courseId, id!);
       res.status(201).json(enrolledCourse);
     } catch (error) {
-      console.log(error, "eroro");
-
       if (error instanceof Error) {
         return next(error);
       }
@@ -353,6 +351,40 @@ export class StudentController {
         studentId!
       );
       res.status(200).json(enrolledCourse);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+  async getEnrolledCoursesByStudent(
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
+    try {
+      const studentId = req.currentUser;
+      const enrolledCourses = await studentService.getAllEnrolledCourses(
+        studentId!
+      );
+      res.status(200).json(enrolledCourses);
+    } catch (error) {
+      console.log(error);
+
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async addProgression(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { enrollmentId, moduleId } = req.query;
+      const progression = await studentService.addProgression(
+        enrollmentId as string,
+        moduleId as string
+      );
+      res.status(201).json(progression);
     } catch (error) {
       if (error instanceof Error) {
         next(error);

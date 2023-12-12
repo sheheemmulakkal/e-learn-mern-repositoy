@@ -23,4 +23,9 @@ export interface IStudentService {
     courseId: string,
     studentId: string
   ): Promise<IEnrolledCourse | null>;
+  getAllEnrolledCourses(studentId: string): Promise<IEnrolledCourse[]>;
+  addProgression(
+    enrollmentId: string,
+    moduleId: string
+  ): Promise<IEnrolledCourse>;
 }
