@@ -8,6 +8,7 @@ export class EnrolledCourseRepository implements IEnrolledCourseRepository {
     const enrollCourse = EnrolledCourse.build(courseDeatils);
     return await enrollCourse.save();
   }
+
   async getCourseById(courseId: string): Promise<IEnrolledCourse> {
     const enrolledCourse = await EnrolledCourse.findById(courseId);
     if (!enrolledCourse) {
@@ -15,6 +16,7 @@ export class EnrolledCourseRepository implements IEnrolledCourseRepository {
     }
     return enrolledCourse;
   }
+
   async getCourseByStudentIdAndCourseId(
     studentId: string,
     courseId: string
@@ -27,12 +29,14 @@ export class EnrolledCourseRepository implements IEnrolledCourseRepository {
       },
     });
   }
+
   async checkEnrolledCourse(
     courseId: string,
     studentId: string
   ): Promise<IEnrolledCourse | null> {
     return await EnrolledCourse.findOne({ studentId, courseId });
   }
+
   async addModuleToProgression(
     enrolledId: string,
     moduleId: string
@@ -41,14 +45,12 @@ export class EnrolledCourseRepository implements IEnrolledCourseRepository {
     if (!course) {
       throw new BadRequestError("Enrollment not found");
     }
-    // console.log(course);
-    // console.log(course.progression?.includes(moduleId), "result");
-
     if (!course.progression?.includes(moduleId)) {
       course.progression?.push(moduleId);
     }
     return await course.save();
   }
+
   async getEnrolledCoursesByStudent(
     studentId: string
   ): Promise<IEnrolledCourse[]> {
@@ -67,7 +69,15 @@ export class EnrolledCourseRepository implements IEnrolledCourseRepository {
     if (!enrolledCourses) {
       throw new BadRequestError("Enrollment not found");
     }
-
     return enrolledCourses;
+  }
+
+  async addNotes(enrolledId: string, notes: string): Promise<IEnrolledCourse> {
+    const enrolledCourse = await EnrolledCourse.findById(enrolledId);
+    if (!enrolledCourse) {
+      throw new BadRequestError("Enrollment not found");
+    }
+    enrolledCourse?.notes?.push(notes);
+    return await enrolledCourse?.save();
   }
 }

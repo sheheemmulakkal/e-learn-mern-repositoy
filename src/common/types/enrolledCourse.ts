@@ -6,4 +6,5 @@ export interface IEnrolledCourse {
   status?: boolean;
   studentId?: string;
   progression?: string[];
+  notes?: string[];
 }

@@ -16,4 +16,5 @@ export interface IEnrolledCourseRepository {
     moduleId: string
   ): Promise<IEnrolledCourse>;
   getEnrolledCoursesByStudent(studentId: string): Promise<IEnrolledCourse[]>;
+  addNotes(enrolledId: string, notes: string): Promise<IEnrolledCourse>;
 }

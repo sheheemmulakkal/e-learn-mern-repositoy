@@ -61,5 +61,6 @@ router.get(
   studentController.getEnrolledCoursesByStudent
 );
 router.get("/add-progression", isStudentAuth, studentController.addProgression);
+router.post("/add-notes", isStudentAuth, studentController.addNotes);
 
 export default router;

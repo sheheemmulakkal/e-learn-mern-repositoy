@@ -224,4 +224,8 @@ export class StudentService implements IStudentService {
       moduleId
     );
   }
+
+  async addNotes(enrolledId: string, notes: string): Promise<IEnrolledCourse> {
+    return await this.enrolledCourseRepository.addNotes(enrolledId, notes);
+  }
 }

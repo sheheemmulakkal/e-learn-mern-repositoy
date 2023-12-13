@@ -13,6 +13,7 @@ interface EnrolledCourseDoc extends Document {
   status?: boolean;
   studentId?: string;
   progression?: string[];
+  notes?: string[];
 }
 
 const enrolledCourseSchema = new mongoose.Schema(
@@ -41,6 +42,11 @@ const enrolledCourseSchema = new mongoose.Schema(
     progression: [
       {
         type: mongoose.Schema.Types.ObjectId,
+      },
+    ],
+    notes: [
+      {
+        type: String,
       },
     ],
   },

@@ -108,7 +108,6 @@ export class StudentController {
               wallet: student.wallet,
               courses: student.courses,
               image: student.image,
-
               role: "student",
             };
             res.status(200).json({
@@ -385,6 +384,18 @@ export class StudentController {
         moduleId as string
       );
       res.status(201).json(progression);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
+
+  async addNotes(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { enrolledId, notes } = req.body;
+      const course = await studentService.addNotes(enrolledId, notes);
+      res.status(201).json(course);
     } catch (error) {
       if (error instanceof Error) {
         next(error);

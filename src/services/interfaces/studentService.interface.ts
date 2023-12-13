@@ -28,4 +28,5 @@ export interface IStudentService {
     enrollmentId: string,
     moduleId: string
   ): Promise<IEnrolledCourse>;
+  addNotes(enrolledId: string, notes: string): Promise<IEnrolledCourse>;
 }
