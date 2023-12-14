@@ -252,7 +252,7 @@ export class StudentService implements IStudentService {
 
   async createRoadmap(topic: string): Promise<string> {
     const openai = new OpenAI({
-      apiKey: "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",
+      apiKey: process.env.OPENAI_KEY,
     });
 
     const TOPIC_PROMPT = `Create a learning path for ${topic}`;
