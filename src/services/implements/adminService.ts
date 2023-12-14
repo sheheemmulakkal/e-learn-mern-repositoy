@@ -15,6 +15,7 @@ import { ICategory } from "../../common/types/category";
 import { CourseApproval, ICourse } from "../../common/types/course";
 import { NotFoundError } from "../../common/errors/notFoundError";
 import { BadRequestError } from "../../common/errors/badRequestError";
+import { emitEvent } from "../socketIoService";
 
 export class AdminService implements IAdminService {
   private adminRepository: AdminRepository;
@@ -163,7 +164,23 @@ export class AdminService implements IAdminService {
     courseId: string,
     approval: CourseApproval
   ): Promise<ICourse> {
-    return await this.courseRepository.courseApproval(courseId, approval);
+    const response = await this.courseRepository.courseApproval(
+      courseId,
+      approval
+    );
+    if (response.approval === "approved") {
+      console.log("approved");
+      emitEvent({
+        event: "course-created",
+        data: {
+          id: response.id as string,
+          courseName: response.name as string,
+          image: response.image as string,
+          message: "New course added",
+        },
+      });
+    }
+    return response;
   }
   async listCourse(courseId: string): Promise<ICourse> {
     return await this.courseRepository.listCourse(courseId);

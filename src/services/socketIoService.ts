@@ -11,6 +11,16 @@ interface ChatMessage {
   message: IMessage;
 }
 
+interface EventData {
+  event: string;
+  data: {
+    message: string;
+    courseName: string;
+    image: string;
+    id: string;
+  }; // Adjust the type based on what data you expect
+}
+
 const httpServer = createServer();
 const io = new Server(httpServer, {
   cors: {
@@ -23,6 +33,9 @@ const activeMembers = new Map<string, number>();
 
 io.on("connection", (socket: Socket) => {
   console.log("A user connected");
+
+  const connectedClientsCount = Object.keys(io.sockets.sockets).length;
+  console.log(connectedClientsCount, "connections");
 
   // Listen for chat messages
   socket.on("join-room", (data: { courseId: string }) => {
@@ -81,8 +94,12 @@ io.on("connection", (socket: Socket) => {
   });
 });
 
+const emitEvent = (eventData: EventData) => {
+  io.emit(eventData.event, eventData.data);
+};
+
 httpServer.listen(4000, () => {
   console.log("Socket.IO listening on *:4000");
 });
 
-export { io };
+export { io, emitEvent };
