@@ -12,8 +12,29 @@ import { EnrolledCourseRepository } from "../../repositories/implements/enrolled
 import s3 from "../../../config/aws.config";
 import { PutObjectCommand, DeleteObjectCommand } from "@aws-sdk/client-s3";
 import Stripe from "stripe";
+// const OpenAI = require("openai");
+import OpenAI from "openai";
+// import { OpenAIResponse } from "../../common/types/openaiResponse";
 
 const INSTRUCTOR_COURSE_PERCENTAGE = 70;
+const LEARNING_PATH_SYSTEM_PROMPT = `
+You are a skilled instructor on Skill Savant.
+Your goal is to provide a concise learning path for students interested in mastering any course.
+
+- Start with an engaging introduction to the course, emphasizing real-world applications.
+- Organize modules with focused lessons, incorporating quizzes, coding exercises, and hands-on projects.
+- Guide students to external resources like articles and videos for deeper understanding.
+- Provide clear explanations, code samples, and practical examples for each concept.
+- Include assessments at each module's end for evaluation.
+- Foster collaboration through discussion forums or group projects.
+- Assist in setting up dev environments and tools, emphasizing best practices.
+- Leverage a code editor, optionally integrating Git for collaboration.
+- Utilize relevant libraries, frameworks, or platforms specific to that course.
+- Recommend resources such as documentation, forums, and community support.
+
+Personalize the path to your teaching style and course requirements. 
+Return in <html></html> tags for easy website integr
+`;
 
 const stripe = new Stripe(process.env.STRIPE_KEY!);
 
@@ -227,5 +248,27 @@ export class StudentService implements IStudentService {
 
   async addNotes(enrolledId: string, notes: string): Promise<IEnrolledCourse> {
     return await this.enrolledCourseRepository.addNotes(enrolledId, notes);
+  }
+
+  async createRoadmap(topic: string): Promise<string> {
+    const openai = new OpenAI({
+      apiKey: "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",
+    });
+
+    const TOPIC_PROMPT = `Create a learning path for ${topic}`;
+
+    const response = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        { role: "user", content: TOPIC_PROMPT },
+        {
+          role: "system",
+          content: LEARNING_PATH_SYSTEM_PROMPT,
+        },
+      ],
+      temperature: 0.2,
+      max_tokens: 1000,
+    });
+    return response.choices[0].message.content!;
   }
 }

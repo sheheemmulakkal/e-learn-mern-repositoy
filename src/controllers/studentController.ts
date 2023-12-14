@@ -402,4 +402,16 @@ export class StudentController {
       }
     }
   }
+
+  async createRoadmap(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { topic } = req.query;
+      const roadmap = await studentService.createRoadmap(topic as string);
+      res.status(200).json(roadmap);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
 }

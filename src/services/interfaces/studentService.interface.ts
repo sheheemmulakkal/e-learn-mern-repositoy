@@ -1,5 +1,6 @@
 import { ICourse } from "../../common/types/course";
 import { IEnrolledCourse } from "../../common/types/enrolledCourse";
+// import { OpenAIResponse } from "../../common/types/openaiResponse";
 import { ISearch } from "../../common/types/searchCourse";
 import { IStudent } from "../../common/types/student";
 export interface IStudentService {
@@ -29,4 +30,5 @@ export interface IStudentService {
     moduleId: string
   ): Promise<IEnrolledCourse>;
   addNotes(enrolledId: string, notes: string): Promise<IEnrolledCourse>;
+  createRoadmap(topic: string): Promise<string>;
 }
