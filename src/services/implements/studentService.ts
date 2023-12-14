@@ -33,7 +33,7 @@ Your goal is to provide a concise learning path for students interested in maste
 - Recommend resources such as documentation, forums, and community support.
 
 Personalize the path to your teaching style and course requirements. 
-Return in <html></html> tags for easy website integr
+Return in bullet points for great understanding.
 `;
 
 const stripe = new Stripe(process.env.STRIPE_KEY!);
