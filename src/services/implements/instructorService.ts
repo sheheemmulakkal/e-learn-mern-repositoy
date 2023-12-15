@@ -9,7 +9,7 @@ import { BadRequestError } from "../../common/errors/badRequestError";
 import { NotFoundError } from "../../common/errors/notFoundError";
 import { ICourse } from "../../common/types/course";
 import { Categories } from "../interfaces/instructorService.interface";
-import { IModule } from "../../common/types/module";
+import { IChapter, IModule } from "../../common/types/module";
 import s3 from "../../../config/aws.config";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { ModuleRepository } from "../../repositories/implements/moduleRepository";
@@ -162,5 +162,9 @@ export class InstructorSerivce implements IInstructorService {
       instructor.id!,
       password
     );
+  }
+
+  async addChapter(courseId: string, chapter: IChapter): Promise<IModule> {
+    return await this.moduleRepository.addChapter(courseId, chapter);
   }
 }

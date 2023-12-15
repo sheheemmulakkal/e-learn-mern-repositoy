@@ -1,5 +1,6 @@
 import mongoose, { Model, Document } from "mongoose";
 import { IModule } from "../common/types/module";
+import { IChapter } from "../common/types/module";
 
 interface ModuleModel extends Model<IModule> {
   build(attrs: IModule): ModuleDoc;
@@ -14,6 +15,7 @@ interface ModuleDoc extends Document {
   duration?: string;
   status?: boolean;
   createdAt?: Date;
+  chapters?: IChapter[];
 }
 
 const moduleSchema = new mongoose.Schema(
@@ -48,6 +50,13 @@ const moduleSchema = new mongoose.Schema(
       required: true,
       default: Date.now,
     },
+    chapters: [
+      {
+        chapter: { type: String },
+        seconds: { type: Number },
+        duration: { type: String },
+      },
+    ],
   },
   {
     toJSON: {

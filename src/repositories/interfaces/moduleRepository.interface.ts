@@ -1,4 +1,4 @@
-import { IModule } from "../../common/types/module";
+import { IChapter, IModule } from "../../common/types/module";
 
 export interface IModuleRepository {
   createModule(moduleDetails: IModule): Promise<IModule>;
@@ -6,4 +6,5 @@ export interface IModuleRepository {
   findModuleById(moduleId: string): Promise<IModule | null>;
   listModule(moduleId: string): Promise<IModule>;
   unlistModule(moduleId: string): Promise<IModule>;
+  addChapter(moduleId: string, chapter: IChapter): Promise<IModule>;
 }

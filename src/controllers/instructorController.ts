@@ -7,6 +7,7 @@ import { ForbiddenError } from "../common/errors/forbiddenError";
 import { NotAuthorizedError } from "../common/errors/notAuthorizedError";
 import { InstructorSerivce } from "../services/implements/instructorService";
 import { IInstructor } from "../common/types/instructor";
+import { secondsToHMS } from "../utils/timeConvertor";
 
 const otpService = new OtpService();
 const instructorService = new InstructorSerivce();
@@ -308,6 +309,28 @@ export class InstructorController {
     } catch (error) {
       if (error instanceof Error) {
         return next(error);
+      }
+    }
+  }
+
+  async addChapter(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { moduleId, time, chapter } = req.body;
+      const seconds = Number(time);
+      const duration = secondsToHMS(seconds);
+      const chapterDetails = {
+        chapter,
+        seconds,
+        duration,
+      };
+      const module = await instructorService.addChapter(
+        moduleId,
+        chapterDetails
+      );
+      res.status(200).json(module);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
       }
     }
   }

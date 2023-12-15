@@ -1,4 +1,4 @@
-import { IModule } from "../../common/types/module";
+import { IChapter, IModule } from "../../common/types/module";
 import { Module } from "../../models/moduleModel";
 import { IModuleRepository } from "../interfaces/moduleRepository.interface";
 
@@ -28,6 +28,11 @@ export class ModuleRepository implements IModuleRepository {
   async unlistModule(moduleId: string): Promise<IModule> {
     const module = await Module.findById(moduleId);
     module!.set({ status: false });
+    return await module!.save();
+  }
+  async addChapter(moduleId: string, chapter: IChapter): Promise<IModule> {
+    const module = await Module.findById(moduleId);
+    module?.chapters?.push(chapter);
     return await module!.save();
   }
 }
