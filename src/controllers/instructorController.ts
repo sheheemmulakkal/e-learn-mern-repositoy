@@ -329,6 +329,8 @@ export class InstructorController {
       );
       res.status(200).json(module);
     } catch (error) {
+      console.log(error);
+
       if (error instanceof Error) {
         next(error);
       }

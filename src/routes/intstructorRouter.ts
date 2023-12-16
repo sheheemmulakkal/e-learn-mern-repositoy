@@ -57,5 +57,10 @@ router.post(
   instructorController.forgotPasswordOtpVerification
 );
 router.post("/forgot-password", instructorController.resetForgottedPassword);
-router.post("/add-chapter", isInstructorAuth, instructorController.addChapter);
+router.post(
+  "/add-chapter",
+  upload.none(),
+  isInstructorAuth,
+  instructorController.addChapter
+);
 export default router;
