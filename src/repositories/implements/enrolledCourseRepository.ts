@@ -2,6 +2,8 @@ import { BadRequestError } from "../../common/errors/badRequestError";
 import { IEnrolledCourse } from "../../common/types/enrolledCourse";
 import { EnrolledCourse } from "../../models/enrolledCourse";
 import { IEnrolledCourseRepository } from "../interfaces/enrolledCourseRepository.interface";
+import { EnrolledCountByCategoryAndDate } from "../../common/types/dashboard";
+// import moment from "moment";
 
 export class EnrolledCourseRepository implements IEnrolledCourseRepository {
   async createCourse(courseDeatils: IEnrolledCourse): Promise<IEnrolledCourse> {
@@ -79,5 +81,70 @@ export class EnrolledCourseRepository implements IEnrolledCourseRepository {
     }
     enrolledCourse?.notes?.push(notes);
     return await enrolledCourse?.save();
+  }
+  async getEnrolledCountOfCategory(): Promise<
+    EnrolledCountByCategoryAndDate[]
+    // eslint-disable-next-line indent
+  > {
+    // const currentDate = new Date();
+    // const fourteenDaysAgo = new Date();
+    // fourteenDaysAgo.setDate(currentDate.getDate() - 14);
+
+    const result = await EnrolledCourse.aggregate([
+      // {
+      //   $match: {
+      //     date: { $gte: fourteenDaysAgo, $lte: currentDate },
+      //   },
+      // },
+      {
+        $lookup: {
+          from: "courses", // Update with the actual name of your Course model
+          localField: "courseId",
+          foreignField: "_id",
+          as: "course",
+        },
+      },
+      {
+        $unwind: "$course",
+      },
+      {
+        $group: {
+          _id: {
+            category: "$course.category",
+            date: {
+              $dateToString: { format: "%Y-%m-%d", date: "$date" },
+            },
+          },
+          enrolledCount: { $sum: 1 },
+        },
+      },
+      {
+        $group: {
+          _id: "$_id.category",
+          data: {
+            $push: {
+              date: "$_id.date",
+              enrolledCount: "$enrolledCount",
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          category: "$_id",
+          data: 1,
+          _id: 0,
+        },
+      },
+      {
+        $lookup: {
+          from: "categories",
+          localField: "category",
+          foreignField: "_id",
+          as: "categoryDetails",
+        },
+      },
+    ]);
+    return result;
   }
 }

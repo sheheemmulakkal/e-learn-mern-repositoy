@@ -445,4 +445,15 @@ export class AdminController {
       }
     }
   }
+
+  async adminDashBoard(req: Request, res: Response, next: NextFunction) {
+    try {
+      const data = await adminService.adminDashboardData();
+      res.status(200).json(data);
+    } catch (error) {
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
 }

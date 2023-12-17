@@ -6,6 +6,7 @@ import { CourseApproval } from "../../common/types/course";
 import { ILevel } from "../../common/types/level";
 import { ILanguage } from "../../common/types/language";
 import { ICourse } from "../../common/types/course";
+import { EnrolledCountByCategoryAndDate } from "../../common/types/dashboard";
 
 export interface IAdminService {
   login(email: string): Promise<IAdmin>;
@@ -41,4 +42,6 @@ export interface IAdminService {
   unlistCourse(courseId: string): Promise<ICourse>;
   listCourse(courseId: string): Promise<ICourse>;
   getSingleCourse(courseId: string): Promise<ICourse>;
+
+  adminDashboardData(): Promise<EnrolledCountByCategoryAndDate[]>;
 }

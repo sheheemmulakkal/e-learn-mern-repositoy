@@ -6,6 +6,7 @@ import { LevelRepository } from "../../repositories/implements/levelRepository";
 import { LanguageRepostory } from "../../repositories/implements/languageRepostory";
 import { CategoryRepository } from "../../repositories/implements/categoryRepository";
 import { CourseRepository } from "../../repositories/implements/courseRepository";
+import { EnrolledCourseRepository } from "../../repositories/implements/enrolledCourseRepository";
 import { IAdmin } from "../../common/types/admin";
 import { IStudent } from "../../common/types/student";
 import { IInstructor } from "../../common/types/instructor";
@@ -16,6 +17,7 @@ import { CourseApproval, ICourse } from "../../common/types/course";
 import { NotFoundError } from "../../common/errors/notFoundError";
 import { BadRequestError } from "../../common/errors/badRequestError";
 import { emitEvent } from "../socketIoService";
+import { EnrolledCountByCategoryAndDate } from "../../common/types/dashboard";
 
 export class AdminService implements IAdminService {
   private adminRepository: AdminRepository;
@@ -25,6 +27,7 @@ export class AdminService implements IAdminService {
   private languageRepository: LanguageRepostory;
   private levelRepository: LevelRepository;
   private courseRepository: CourseRepository;
+  private enrolledCourseRepository: EnrolledCourseRepository;
   constructor() {
     this.adminRepository = new AdminRepository();
     this.instructorRepository = new InstructorRepository();
@@ -33,6 +36,7 @@ export class AdminService implements IAdminService {
     this.languageRepository = new LanguageRepostory();
     this.levelRepository = new LevelRepository();
     this.courseRepository = new CourseRepository();
+    this.enrolledCourseRepository = new EnrolledCourseRepository();
   }
 
   async login(email: string): Promise<IAdmin> {
@@ -196,5 +200,8 @@ export class AdminService implements IAdminService {
       throw new BadRequestError("Course not found");
     }
     return course;
+  }
+  async adminDashboardData(): Promise<EnrolledCountByCategoryAndDate[]> {
+    return await this.enrolledCourseRepository.getEnrolledCountOfCategory();
   }
 }

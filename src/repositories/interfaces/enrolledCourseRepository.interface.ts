@@ -1,5 +1,7 @@
 import { IEnrolledCourse } from "../../common/types/enrolledCourse";
 
+import { EnrolledCountByCategoryAndDate } from "../../common/types/dashboard";
+
 export interface IEnrolledCourseRepository {
   createCourse(courseDeatils: IEnrolledCourse): Promise<IEnrolledCourse>;
   getCourseById(courseId: string): Promise<IEnrolledCourse>;
@@ -17,4 +19,5 @@ export interface IEnrolledCourseRepository {
   ): Promise<IEnrolledCourse>;
   getEnrolledCoursesByStudent(studentId: string): Promise<IEnrolledCourse[]>;
   addNotes(enrolledId: string, notes: string): Promise<IEnrolledCourse>;
+  getEnrolledCountOfCategory(): Promise<EnrolledCountByCategoryAndDate[]>;
 }

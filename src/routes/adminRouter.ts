@@ -44,6 +44,7 @@ router.patch("/list-course", isAdminAuth, adminController.listCourse);
 router.patch("/unlist-course", isAdminAuth, adminController.unlistCourse);
 router.patch("/approve-course", isAdminAuth, adminController.approveCourse);
 router.patch("/reject-course", isAdminAuth, adminController.rejectCourse);
+router.get("/dashboard", adminController.adminDashBoard);
 router.get("/course/:id/module");
 router.patch("/list-module");
 router.patch("/unlist-module");

@@ -28,6 +28,7 @@
     "fluent-ffmpeg": "^2.1.2",
     "get-video-duration": "^4.1.0",
     "jsonwebtoken": "^9.0.2",
+    "moment": "^2.29.4",
     "mongoose": "^7.6.3",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.7",
