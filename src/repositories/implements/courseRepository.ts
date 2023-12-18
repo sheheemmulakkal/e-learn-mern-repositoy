@@ -153,4 +153,8 @@ export class CourseRepository implements ICourseRepository {
     const course = await Course.find({ approval: "approved", ...details });
     return course;
   }
+
+  async getCourseCount(): Promise<number> {
+    return await Course.count({ approval: CourseApproval.approved });
+  }
 }

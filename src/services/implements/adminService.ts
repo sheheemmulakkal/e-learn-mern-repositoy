@@ -19,6 +19,14 @@ import { BadRequestError } from "../../common/errors/badRequestError";
 import { emitEvent } from "../socketIoService";
 import { EnrolledCountByCategoryAndDate } from "../../common/types/dashboard";
 
+interface adminDashboardData {
+  enrolledCountByCategoryAndDate: EnrolledCountByCategoryAndDate[];
+  totalRevenue: number;
+  studentCount: number;
+  instructorCount: number;
+  courseCount: number;
+}
+
 export class AdminService implements IAdminService {
   private adminRepository: AdminRepository;
   private instructorRepository: InstructorRepository;
@@ -201,7 +209,21 @@ export class AdminService implements IAdminService {
     }
     return course;
   }
-  async adminDashboardData(): Promise<EnrolledCountByCategoryAndDate[]> {
-    return await this.enrolledCourseRepository.getEnrolledCountOfCategory();
+  async adminDashboardData(): Promise<adminDashboardData> {
+    const enrolledCountByCategoryAndDate =
+      await this.enrolledCourseRepository.getEnrolledCountOfCategory();
+    const totalRevenue = await this.enrolledCourseRepository.getTotalRevnue();
+    const instructorCount =
+      await this.instructorRepository.getInstructorCount();
+    const studentCount = await this.studentRepository.getStudentCount();
+    const courseCount = await this.courseRepository.getCourseCount();
+
+    return {
+      enrolledCountByCategoryAndDate,
+      totalRevenue,
+      instructorCount,
+      studentCount,
+      courseCount,
+    };
   }
 }

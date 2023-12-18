@@ -20,4 +20,5 @@ export interface ICourseRepository {
   addCourseImage(courseId: string, image: string): Promise<ICourse>;
   getSingleCourseForAdmin(courseId: string): Promise<ICourse | null>;
   searchCoursesForStudents(details: ISearch): Promise<ICourse[] | null>;
+  getCourseCount(): Promise<number>;
 }

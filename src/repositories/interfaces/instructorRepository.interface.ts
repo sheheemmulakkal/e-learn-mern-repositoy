@@ -14,4 +14,5 @@ export interface IInstructorRepository {
     amount: number,
     description: string
   ): Promise<IInstructor>;
+  getInstructorCount(): Promise<number>;
 }

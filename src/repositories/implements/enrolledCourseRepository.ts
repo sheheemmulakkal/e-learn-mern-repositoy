@@ -3,7 +3,6 @@ import { IEnrolledCourse } from "../../common/types/enrolledCourse";
 import { EnrolledCourse } from "../../models/enrolledCourse";
 import { IEnrolledCourseRepository } from "../interfaces/enrolledCourseRepository.interface";
 import { EnrolledCountByCategoryAndDate } from "../../common/types/dashboard";
-// import moment from "moment";
 
 export class EnrolledCourseRepository implements IEnrolledCourseRepository {
   async createCourse(courseDeatils: IEnrolledCourse): Promise<IEnrolledCourse> {
@@ -86,19 +85,10 @@ export class EnrolledCourseRepository implements IEnrolledCourseRepository {
     EnrolledCountByCategoryAndDate[]
     // eslint-disable-next-line indent
   > {
-    // const currentDate = new Date();
-    // const fourteenDaysAgo = new Date();
-    // fourteenDaysAgo.setDate(currentDate.getDate() - 14);
-
     const result = await EnrolledCourse.aggregate([
-      // {
-      //   $match: {
-      //     date: { $gte: fourteenDaysAgo, $lte: currentDate },
-      //   },
-      // },
       {
         $lookup: {
-          from: "courses", // Update with the actual name of your Course model
+          from: "courses",
           localField: "courseId",
           foreignField: "_id",
           as: "course",
@@ -146,5 +136,29 @@ export class EnrolledCourseRepository implements IEnrolledCourseRepository {
       },
     ]);
     return result;
+  }
+
+  async getTotalRevnue(): Promise<number> {
+    const result = await EnrolledCourse.aggregate([
+      {
+        $match: {
+          status: true, // Assuming you want to consider only enrolled courses with status true
+        },
+      },
+      {
+        $group: {
+          _id: null,
+          totalRevenue: { $sum: "$price" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          totalRevenue: 1,
+        },
+      },
+    ]);
+
+    return result.length > 0 ? result[0].totalRevenue : 0;
   }
 }

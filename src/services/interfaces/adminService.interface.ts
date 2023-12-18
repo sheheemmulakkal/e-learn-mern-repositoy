@@ -8,6 +8,14 @@ import { ILanguage } from "../../common/types/language";
 import { ICourse } from "../../common/types/course";
 import { EnrolledCountByCategoryAndDate } from "../../common/types/dashboard";
 
+interface adminDashboardData {
+  enrolledCountByCategoryAndDate: EnrolledCountByCategoryAndDate[];
+  totalRevenue: number;
+  studentCount: number;
+  instructorCount: number;
+  courseCount: number;
+}
+
 export interface IAdminService {
   login(email: string): Promise<IAdmin>;
 
@@ -42,6 +50,5 @@ export interface IAdminService {
   unlistCourse(courseId: string): Promise<ICourse>;
   listCourse(courseId: string): Promise<ICourse>;
   getSingleCourse(courseId: string): Promise<ICourse>;
-
-  adminDashboardData(): Promise<EnrolledCountByCategoryAndDate[]>;
+  adminDashboardData(): Promise<adminDashboardData>;
 }

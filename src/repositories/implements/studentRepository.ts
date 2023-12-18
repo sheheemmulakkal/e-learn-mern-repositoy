@@ -87,4 +87,8 @@ export class StudentRepository implements IStudnetRepository {
     student.courses?.push(courseId);
     return await student.save();
   }
+
+  async getStudentCount(): Promise<number> {
+    return await Student.count();
+  }
 }

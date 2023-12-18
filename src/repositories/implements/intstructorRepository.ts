@@ -79,4 +79,7 @@ export class InstructorRepository implements IInstructorRepository {
     instructor.walletHistory?.push(walletHistoryDetails);
     return await instructor.save();
   }
+  async getInstructorCount(): Promise<number> {
+    return await Instructor.count();
+  }
 }

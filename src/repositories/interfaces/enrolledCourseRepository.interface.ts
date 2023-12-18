@@ -20,4 +20,5 @@ export interface IEnrolledCourseRepository {
   getEnrolledCoursesByStudent(studentId: string): Promise<IEnrolledCourse[]>;
   addNotes(enrolledId: string, notes: string): Promise<IEnrolledCourse>;
   getEnrolledCountOfCategory(): Promise<EnrolledCountByCategoryAndDate[]>;
+  getTotalRevnue(): Promise<number>;
 }
