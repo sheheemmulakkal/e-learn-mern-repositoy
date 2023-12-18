@@ -6,6 +6,7 @@ import studentRouter from "./src/routes/studentRouter";
 import instrutorRouter from "./src/routes/intstructorRouter";
 import adminRouter from "./src/routes/adminRouter";
 import { errorHandler } from "./src/middlewares/errorHandler";
+import cronJobSetup from "./src/services/cronJobSetup";
 
 const app = express();
 
@@ -25,5 +26,6 @@ app.use("/instructor", instrutorRouter);
 app.use("/admin", adminRouter);
 app.use(studentRouter);
 app.use(errorHandler);
+cronJobSetup();
 
 export { httpServer };

@@ -91,4 +91,9 @@ export class StudentRepository implements IStudnetRepository {
   async getStudentCount(): Promise<number> {
     return await Student.count();
   }
+  async getAllStudentsEmails(): Promise<string[]> {
+    const students = await Student.find({ isVerified: true });
+    const userEmails: string[] = students.map((student) => student.email);
+    return userEmails;
+  }
 }

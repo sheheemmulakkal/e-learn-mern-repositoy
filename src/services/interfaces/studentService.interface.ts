@@ -31,4 +31,5 @@ export interface IStudentService {
   ): Promise<IEnrolledCourse>;
   addNotes(enrolledId: string, notes: string): Promise<IEnrolledCourse>;
   createRoadmap(topic: string): Promise<string>;
+  scheduledMail(): Promise<void>;
 }

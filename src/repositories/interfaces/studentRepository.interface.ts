@@ -13,4 +13,5 @@ export interface IStudnetRepository {
   updateImage(studentId: string, image: string): Promise<IStudent>;
   courseEnroll(studentId: string, courseId: string): Promise<IStudent>;
   getStudentCount(): Promise<number>;
+  getAllStudentsEmails(): Promise<string[]>;
 }
