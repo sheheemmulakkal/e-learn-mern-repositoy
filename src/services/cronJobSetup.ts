@@ -10,6 +10,7 @@ export default function setupCronJob() {
     cronSchedule,
     () => {
       studentService.scheduledMail();
+      console.log("cron job");
     },
     {
       scheduled: true,
