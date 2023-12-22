@@ -3,8 +3,13 @@ import { ISearch } from "../../common/types/searchCourse";
 
 export interface ICourseRepository {
   createCourse(courseDeatils: ICourse): Promise<ICourse>;
-  getAllCourses(): Promise<ICourse[] | null>;
-  getCourseByInstructor(instructorId: string): Promise<ICourse[] | null>;
+  getAllCourses(
+    page: number
+  ): Promise<{ courses: ICourse[]; totalCount: number } | null>;
+  getCourseByInstructor(
+    instructorId: string,
+    page: number
+  ): Promise<{ courses: ICourse[]; totalCount: number } | null>;
   getSingleCourseForInstructor(courseId: string): Promise<ICourse | null>;
   getCoursesByApproval(approval: CourseApproval): Promise<ICourse[] | null>;
   updateCourse(courseDeatils: ICourse): Promise<ICourse>;

@@ -15,7 +15,10 @@ export interface IInstructorService {
   signup(instructorDetails: IInstructor): Promise<IInstructor>;
   login(email: string): Promise<IInstructor>;
   verifyInstructor(email: string): Promise<IInstructor>;
-  getMyCourses(instructorId: string): Promise<ICourse[] | null>;
+  getMyCourses(
+    instructorId: string,
+    page: number
+  ): Promise<{ courses: ICourse[]; totalCount: number } | null>;
   createCourse(courseDeatils: ICourse): Promise<ICourse>;
   updateCourse(courseDeatils: ICourse): Promise<ICourse>;
   addCourseImage(courseId: string, file: Express.Multer.File): Promise<ICourse>;

@@ -44,7 +44,9 @@ export interface IAdminService {
   listLanguage(languageId: string): Promise<ILanguage>;
   unlistLanguage(languageId: string): Promise<ILanguage>;
 
-  getAllCourses(): Promise<ICourse[] | null>;
+  getAllCourses(
+    page: number
+  ): Promise<{ courses: ICourse[]; totalCount: number } | null>;
   getCoursesByApproval(approval: CourseApproval): Promise<ICourse[] | null>;
   courseApproval(courseId: string, approval: CourseApproval): Promise<ICourse>;
   unlistCourse(courseId: string): Promise<ICourse>;

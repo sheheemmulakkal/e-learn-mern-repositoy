@@ -134,11 +134,19 @@ export class InstructorController {
 
   async getMycourses(req: Request, res: Response, next: NextFunction) {
     try {
+      let pageNo = 0;
+      const { page } = req.query;
+      if (page !== undefined && !isNaN(Number(page))) {
+        pageNo = Number(page);
+      }
       const instructorId = req.currentUser;
       if (!instructorId) {
         throw new ForbiddenError("Invalid token");
       }
-      const courses = await instructorService.getMyCourses(instructorId);
+      const courses = await instructorService.getMyCourses(
+        instructorId,
+        pageNo
+      );
       res.status(200).json(courses);
     } catch (error) {
       if (error instanceof Error) {

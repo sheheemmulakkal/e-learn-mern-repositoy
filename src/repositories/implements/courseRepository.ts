@@ -11,18 +11,42 @@ export class CourseRepository implements ICourseRepository {
     return await course.save();
   }
 
-  async getAllCourses(): Promise<ICourse[] | null> {
-    return await Course.find()
+  async getAllCourses(page: number): Promise<{
+    courses: ICourse[];
+    totalCount: number;
+  } | null> {
+    const LIMIT = 10;
+    let skip = 0;
+    if (page > 1) {
+      skip = (page - 1) * LIMIT;
+    }
+    const courses = await Course.find()
+      .skip(skip)
+      .limit(LIMIT)
       .populate("category")
       .populate("level")
       .populate("language");
+    const totalCount = await Course.find().count();
+    return { courses, totalCount };
   }
 
-  async getCourseByInstructor(instructorId: string): Promise<ICourse[] | null> {
-    return await Course.find({ instructor: instructorId })
+  async getCourseByInstructor(
+    instructorId: string,
+    page: number
+  ): Promise<{ courses: ICourse[]; totalCount: number } | null> {
+    const LIMIT = 8;
+    let skip = 0;
+    if (page > 1) {
+      skip = (page - 1) * LIMIT;
+    }
+    const courses = await Course.find({ instructor: instructorId })
+      .skip(skip)
+      .limit(LIMIT)
       .populate("category")
       .populate("level")
       .populate("language");
+    const totalCount = await Course.find({ instructor: instructorId }).count();
+    return { courses, totalCount };
   }
 
   async getSingleCourseForInstructor(

@@ -318,7 +318,12 @@ export class AdminController {
 
   async getAllCourses(req: Request, res: Response, next: NextFunction) {
     try {
-      const courses = await adminService.getAllCourses();
+      let pageNo = 0;
+      const { page } = req.query;
+      if (page !== undefined && !isNaN(Number(page))) {
+        pageNo = Number(page);
+      }
+      const courses = await adminService.getAllCourses(pageNo);
       res.status(200).json(courses);
     } catch (error) {
       if (error instanceof Error) {

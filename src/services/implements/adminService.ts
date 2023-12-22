@@ -164,8 +164,11 @@ export class AdminService implements IAdminService {
     return this.languageRepository.unlistLanguage(languageId);
   }
 
-  async getAllCourses(): Promise<ICourse[] | null> {
-    return await this.courseRepository.getAllCourses();
+  async getAllCourses(page: number): Promise<{
+    courses: ICourse[];
+    totalCount: number;
+  } | null> {
+    return await this.courseRepository.getAllCourses(page);
   }
   async getCoursesByApproval(
     approval: CourseApproval

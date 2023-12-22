@@ -57,8 +57,14 @@ export class InstructorSerivce implements IInstructorService {
   async verifyInstructor(email: string): Promise<IInstructor> {
     return await this.instructorRepository.updateInstructorVerification(email);
   }
-  async getMyCourses(instructorId: string): Promise<ICourse[] | null> {
-    return await this.courseRepository.getCourseByInstructor(instructorId);
+  async getMyCourses(
+    instructorId: string,
+    page: number
+  ): Promise<{ courses: ICourse[]; totalCount: number } | null> {
+    return await this.courseRepository.getCourseByInstructor(
+      instructorId,
+      page
+    );
   }
   async getSingleCourse(courseId: string): Promise<ICourse | null> {
     return await this.courseRepository.getSingleCourseForInstructor(courseId);
