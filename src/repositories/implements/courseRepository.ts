@@ -70,8 +70,6 @@ export class CourseRepository implements ICourseRepository {
   }
 
   async findCourseById(courseId: string): Promise<ICourse | null> {
-    console.log(courseId, "id respo");
-
     const course = await Course.findById(courseId);
     if (!course) {
       throw new NotFoundError("Course not found");
@@ -166,7 +164,6 @@ export class CourseRepository implements ICourseRepository {
     if (page > 1) {
       skip = (page - 1) * LIMIT;
     }
-    console.log(condition);
     const courses = await Course.find(condition)
       .limit(LIMIT)
       .skip(skip)
