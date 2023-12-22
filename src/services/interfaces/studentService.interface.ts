@@ -1,3 +1,4 @@
+import { ICategory } from "../../common/types/category";
 import { ICourse } from "../../common/types/course";
 import { IEnrolledCourse } from "../../common/types/enrolledCourse";
 // import { OpenAIResponse } from "../../common/types/openaiResponse";
@@ -7,9 +8,11 @@ export interface IStudentService {
   signup(studentDetails: IStudent): Promise<IStudent>;
   login(email: string): Promise<IStudent>;
   verifyStudent(email: string): Promise<IStudent>;
-  getCourses(
-    page: number
-  ): Promise<{ courses: ICourse[]; totalCount: number } | null>;
+  getCourses({ page, category }: { page: number; category?: string }): Promise<{
+    courses: ICourse[];
+    totalCount: number;
+    categories: ICategory[];
+  } | null>;
   updatePassword(studentId: string, password: string): Promise<IStudent>;
   findStudentById(studentId: string): Promise<IStudent>;
   updateStudentName(studentDetails: IStudent): Promise<IStudent>;

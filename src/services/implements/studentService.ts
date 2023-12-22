@@ -7,6 +7,7 @@ import { ISearch } from "../../common/types/searchCourse";
 import { IEnrolledCourse } from "../../common/types/enrolledCourse";
 import { StudentRepository } from "../../repositories/implements/studentRepository";
 import { CourseRepository } from "../../repositories/implements/courseRepository";
+import { CategoryRepository } from "../../repositories/implements/categoryRepository";
 import { InstructorRepository } from "../../repositories/implements/intstructorRepository";
 import { EnrolledCourseRepository } from "../../repositories/implements/enrolledCourseRepository";
 import s3 from "../../../config/aws.config";
@@ -15,6 +16,7 @@ import Stripe from "stripe";
 import nodemailer from "nodemailer";
 // const OpenAI = require("openai");
 import OpenAI from "openai";
+import { ICategory } from "../../common/types/category";
 // import { OpenAIResponse } from "../../common/types/openaiResponse";
 
 const INSTRUCTOR_COURSE_PERCENTAGE = 70;
@@ -44,12 +46,14 @@ export class StudentService implements IStudentService {
   private instructorRepository: InstructorRepository;
   private courseRepository: CourseRepository;
   private enrolledCourseRepository: EnrolledCourseRepository;
+  private categoryRepository: CategoryRepository;
 
   constructor() {
     this.studentRepository = new StudentRepository();
     this.instructorRepository = new InstructorRepository();
     this.courseRepository = new CourseRepository();
     this.enrolledCourseRepository = new EnrolledCourseRepository();
+    this.categoryRepository = new CategoryRepository();
   }
 
   async signup(studentDetails: IStudent): Promise<IStudent> {
@@ -75,11 +79,28 @@ export class StudentService implements IStudentService {
   async verifyStudent(email: string): Promise<IStudent> {
     return await this.studentRepository.updateUserVerification(email);
   }
-  async getCourses(page: number): Promise<{
+  async getCourses({
+    page,
+    category,
+  }: {
+    page: number;
+    category?: string;
+  }): Promise<{
     courses: ICourse[];
     totalCount: number;
+    categories: ICategory[];
   } | null> {
-    return await this.courseRepository.getListedCourses(page);
+    const courseDeatils = await this.courseRepository.getListedCourses({
+      page,
+      category,
+    });
+    const categories = await this.categoryRepository.getListedCategories();
+    const result = { ...courseDeatils, categories } as {
+      courses: ICourse[];
+      totalCount: number;
+      categories: ICategory[];
+    } | null;
+    return result;
   }
 
   async findStudentById(studentId: string): Promise<IStudent> {

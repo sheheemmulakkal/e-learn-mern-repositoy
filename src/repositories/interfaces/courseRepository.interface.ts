@@ -21,7 +21,13 @@ export interface ICourseRepository {
   courseApproval(courseId: string, status: string): Promise<ICourse>;
   listCourse(courseId: string): Promise<ICourse>;
   unlistCourse(courseId: string): Promise<ICourse>;
-  getListedCourses(page: number): Promise<{
+  getListedCourses({
+    page,
+    category,
+  }: {
+    page: number;
+    category?: string;
+  }): Promise<{
     courses: ICourse[];
     totalCount: number;
   } | null>;
