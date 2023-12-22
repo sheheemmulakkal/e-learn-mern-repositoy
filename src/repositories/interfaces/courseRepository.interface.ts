@@ -16,7 +16,10 @@ export interface ICourseRepository {
   courseApproval(courseId: string, status: string): Promise<ICourse>;
   listCourse(courseId: string): Promise<ICourse>;
   unlistCourse(courseId: string): Promise<ICourse>;
-  getListedCourses(): Promise<ICourse[] | null>;
+  getListedCourses(page: number): Promise<{
+    courses: ICourse[];
+    totalCount: number;
+  } | null>;
   addCourseImage(courseId: string, image: string): Promise<ICourse>;
   getSingleCourseForAdmin(courseId: string): Promise<ICourse | null>;
   searchCoursesForStudents(details: ISearch): Promise<ICourse[] | null>;

@@ -119,14 +119,31 @@ export class CourseRepository implements ICourseRepository {
     return await course.save();
   }
 
-  async getListedCourses(): Promise<ICourse[] | null> {
-    return await Course.find({
+  async getListedCourses(page: number): Promise<{
+    courses: ICourse[];
+    totalCount: number;
+  } | null> {
+    const LIMIT = 8;
+    let skip = 0;
+    if (page > 1) {
+      skip = (page - 1) * LIMIT;
+    }
+    const courses = await Course.find({
       status: true,
       approval: CourseApproval.approved,
     })
+      .limit(LIMIT)
+      .skip(skip)
       .populate("category")
       .populate("level")
       .populate("language");
+
+    const totalCount = await Course.find({
+      status: true,
+      approval: CourseApproval.approved,
+    }).count();
+
+    return { courses, totalCount };
   }
 
   async addCourseImage(courseId: string, image: string): Promise<ICourse> {

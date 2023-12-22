@@ -137,7 +137,20 @@ export class StudentController {
 
   async getCourses(req: Request, res: Response, next: NextFunction) {
     try {
-      const courses = await studentService.getCourses();
+      let pageNo = 0;
+      // itemLimit = 0;
+
+      const { page } = req.query;
+      if (page !== undefined && !isNaN(Number(page))) {
+        pageNo = Number(page);
+      }
+      // if (limit !== undefined && !isNaN(Number(limit))) {
+      //   itemLimit = Number(limit);
+      // }
+      // console.log(pageNo);
+      // console.log(itemLimit);
+
+      const courses = await studentService.getCourses(pageNo);
       res.status(200).json(courses);
     } catch (error) {
       if (error instanceof Error) {

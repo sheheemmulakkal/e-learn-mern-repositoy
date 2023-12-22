@@ -75,8 +75,11 @@ export class StudentService implements IStudentService {
   async verifyStudent(email: string): Promise<IStudent> {
     return await this.studentRepository.updateUserVerification(email);
   }
-  async getCourses(): Promise<ICourse[] | null> {
-    return await this.courseRepository.getListedCourses();
+  async getCourses(page: number): Promise<{
+    courses: ICourse[];
+    totalCount: number;
+  } | null> {
+    return await this.courseRepository.getListedCourses(page);
   }
 
   async findStudentById(studentId: string): Promise<IStudent> {
