@@ -25,6 +25,7 @@ const enrolledCourseSchema = new mongoose.Schema(
     },
     studentId: {
       type: mongoose.Schema.Types.ObjectId,
+      ref: "student",
       required: true,
     },
     price: {

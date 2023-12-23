@@ -80,6 +80,8 @@ export class InstructorSerivce implements IInstructorService {
       await this.enrolledCourseRepository.getEnrolledCoursesByCourseId(
         courseId
       );
+    console.log(enrollments, "en");
+
     const course = await this.courseRepository.getSingleCourseForInstructor(
       courseId
     );

@@ -247,7 +247,7 @@ export class InstructorController {
       const { name, description, courseId } = req.body;
       const file = req.file;
       const existingModule = await instructorService.getSingleCourse(courseId);
-      const order = (existingModule?.modules?.length || 0) + 1;
+      const order = (existingModule?.course.modules?.length || 0) + 1;
       await instructorService.createModule(
         { name, description, courseId },
         order,
