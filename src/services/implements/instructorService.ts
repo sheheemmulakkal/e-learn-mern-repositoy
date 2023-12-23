@@ -4,10 +4,12 @@ import { CourseRepository } from "../../repositories/implements/courseRepository
 import { CategoryRepository } from "../../repositories/implements/categoryRepository";
 import { LevelRepository } from "../../repositories/implements/levelRepository";
 import { LanguageRepostory } from "../../repositories/implements/languageRepostory";
+import { EnrolledCourseRepository } from "../../repositories/implements/enrolledCourseRepository";
 import { IInstructor } from "../../common/types/instructor";
 import { BadRequestError } from "../../common/errors/badRequestError";
 import { NotFoundError } from "../../common/errors/notFoundError";
 import { ICourse } from "../../common/types/course";
+import { IEnrolledCourse } from "../../common/types/enrolledCourse";
 import { Categories } from "../interfaces/instructorService.interface";
 import { IChapter, IModule } from "../../common/types/module";
 import s3 from "../../../config/aws.config";
@@ -23,6 +25,8 @@ export class InstructorSerivce implements IInstructorService {
   private levelRepostory: LevelRepository;
   private languageRepository: LanguageRepostory;
   private moduleRepository: ModuleRepository;
+  private enrolledCourseRepository: EnrolledCourseRepository;
+
   constructor() {
     this.instructorRepository = new InstructorRepository();
     this.courseRepository = new CourseRepository();
@@ -30,6 +34,7 @@ export class InstructorSerivce implements IInstructorService {
     this.levelRepostory = new LevelRepository();
     this.languageRepository = new LanguageRepostory();
     this.moduleRepository = new ModuleRepository();
+    this.enrolledCourseRepository = new EnrolledCourseRepository();
   }
   async signup(instructorDetails: IInstructor): Promise<IInstructor> {
     const existingInstructor =
@@ -66,8 +71,22 @@ export class InstructorSerivce implements IInstructorService {
       page
     );
   }
-  async getSingleCourse(courseId: string): Promise<ICourse | null> {
-    return await this.courseRepository.getSingleCourseForInstructor(courseId);
+
+  // fjsadhfiosfjsaifs
+  async getSingleCourse(
+    courseId: string
+  ): Promise<{ course: ICourse; enrollments: IEnrolledCourse[] } | null> {
+    const enrollments =
+      await this.enrolledCourseRepository.getEnrolledCoursesByCourseId(
+        courseId
+      );
+    const course = await this.courseRepository.getSingleCourseForInstructor(
+      courseId
+    );
+    return { course, enrollments } as {
+      course: ICourse;
+      enrollments: IEnrolledCourse[];
+    };
   }
   async createCourse(courseDeatils: ICourse): Promise<ICourse> {
     return await this.courseRepository.createCourse(courseDeatils);

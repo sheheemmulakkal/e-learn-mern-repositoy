@@ -161,4 +161,10 @@ export class EnrolledCourseRepository implements IEnrolledCourseRepository {
 
     return result.length > 0 ? result[0].totalRevenue : 0;
   }
+
+  async getEnrolledCoursesByCourseId(
+    courseId: string
+  ): Promise<IEnrolledCourse[]> {
+    return await EnrolledCourse.find({ courseId }).populate("studentId");
+  }
 }

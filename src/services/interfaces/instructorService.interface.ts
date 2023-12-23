@@ -4,6 +4,7 @@ import { ICategory } from "../../common/types/category";
 import { ILevel } from "../../common/types/level";
 import { ILanguage } from "../../common/types/language";
 import { IChapter, IModule } from "../../common/types/module";
+import { IEnrolledCourse } from "../../common/types/enrolledCourse";
 
 export interface Categories {
   categories: ICategory[] | null;
@@ -20,6 +21,9 @@ export interface IInstructorService {
     page: number
   ): Promise<{ courses: ICourse[]; totalCount: number } | null>;
   createCourse(courseDeatils: ICourse): Promise<ICourse>;
+  getSingleCourse(
+    courseId: string
+  ): Promise<{ course: ICourse; enrollments: IEnrolledCourse[] } | null>;
   updateCourse(courseDeatils: ICourse): Promise<ICourse>;
   addCourseImage(courseId: string, file: Express.Multer.File): Promise<ICourse>;
   deleteCourse(courseId: string): Promise<ICourse>;
