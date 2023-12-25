@@ -118,7 +118,12 @@ export class InstructorSerivce implements IInstructorService {
     try {
       const { name, description, courseId } = moduleDetails;
 
-      const key = `courses/${name}/${file.originalname}`;
+      const sanitizedCourseName = name!.replace(/\s/g, "_"); // Replace spaces with underscores or any character
+      const sanitizedFileName = encodeURIComponent(file.originalname);
+
+      const key = `courses/${sanitizedCourseName}/${sanitizedFileName}`;
+
+      // const key = `courses/${name}/${file.originalname}`;
       const params = {
         Bucket: "eduvistabucket-aws",
         Key: key,
