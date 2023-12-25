@@ -24,7 +24,7 @@ interface EventData {
 const httpServer = createServer();
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:5173", // Update with your client's origin
+    // origin: "http://localhost:5173",
     methods: ["GET", "POST"],
   },
 });
