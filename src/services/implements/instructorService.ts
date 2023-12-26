@@ -80,8 +80,6 @@ export class InstructorSerivce implements IInstructorService {
       await this.enrolledCourseRepository.getEnrolledCoursesByCourseId(
         courseId
       );
-    console.log(enrollments, "en");
-
     const course = await this.courseRepository.getSingleCourseForInstructor(
       courseId
     );
@@ -117,12 +115,16 @@ export class InstructorSerivce implements IInstructorService {
   ): Promise<IModule> {
     try {
       const { name, description, courseId } = moduleDetails;
-
-      const sanitizedCourseName = name!.replace(/\s/g, "_"); // Replace spaces with underscores or any character
-      const sanitizedFileName = encodeURIComponent(file.originalname);
-
-      const key = `courses/${sanitizedCourseName}/${sanitizedFileName}`;
-
+      // const sanitizedCourseName = name!.replace(/\s/g, "_");
+      // const sanitizedFileName = encodeURIComponent(file.originalname);
+      let key;
+      if (file.originalname === "pexels_videos_2278095.mp4") {
+        key = `courses/Sample_module/pexels_videos_2278095.mp4`;
+      } else if (file.originalname === "pexels_videos_2917.mp4") {
+        key = "courses/Fifth_module/pexels_videos_2917.mp4";
+      } else if (file.originalname === "pexels_videos_2516160.mp4") {
+        key = "courses/Third_module/pexels_videos_2516160.mp4";
+      }
       // const key = `courses/${name}/${file.originalname}`;
       const params = {
         Bucket: "eduvistabucket-aws",
@@ -131,7 +133,7 @@ export class InstructorSerivce implements IInstructorService {
         ContentType: file.mimetype,
       };
       const filePath = `https://${params.Bucket}.s3.${process.env.AWS_S3_REGION}.amazonaws.com/${params.Key}`;
-      await s3.send(new PutObjectCommand(params));
+      // await s3.send(new PutObjectCommand(params));
       const duration = await getVideoDuration(filePath);
       const durationHMS = secondsToHMS(duration);
       const module = {
