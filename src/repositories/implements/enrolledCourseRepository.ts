@@ -169,14 +169,10 @@ export class EnrolledCourseRepository implements IEnrolledCourseRepository {
   }
 
   async completedStatus(enrolledId: string): Promise<void> {
-    console.log(enrolledId, "eno");
-
     const course = await EnrolledCourse.findById(enrolledId);
     if (course) {
       course.set({ completed: true });
     }
-    console.log(course, " dour");
-
     await course?.save();
   }
 }

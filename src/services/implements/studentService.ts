@@ -276,13 +276,9 @@ export class StudentService implements IStudentService {
       course?.modules?.length === response.progression?.length &&
       !response.completed
     ) {
-      console.log("ehoooo");
-
       const student = await this.studentRepository.findStudentById(
         response.studentId!
       );
-      console.log(student, "stu");
-
       const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
@@ -305,12 +301,8 @@ export class StudentService implements IStudentService {
           },
         ],
       });
-      console.log("hi");
-
       await this.enrolledCourseRepository.completedStatus(response.id!);
     }
-    console.log(response);
-
     return response;
   }
 
