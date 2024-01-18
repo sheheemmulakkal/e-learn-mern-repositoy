@@ -15,7 +15,7 @@ import { IChapter, IModule } from "../../common/types/module";
 import s3 from "../../../config/aws.config";
 import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { ModuleRepository } from "../../repositories/implements/moduleRepository";
-import getVideoDuration from "get-video-duration";
+// import getVideoDuration from "get-video-duration";
 import { secondsToHMS } from "../../utils/timeConvertor";
 
 export class InstructorSerivce implements IInstructorService {
@@ -118,12 +118,20 @@ export class InstructorSerivce implements IInstructorService {
       // const sanitizedCourseName = name!.replace(/\s/g, "_");
       // const sanitizedFileName = encodeURIComponent(file.originalname);
       let key;
+      let duration = 13;
       if (file.originalname === "pexels_videos_2278095.mp4") {
         key = `courses/Sample_module/pexels_videos_2278095.mp4`;
+        duration = 54;
       } else if (file.originalname === "pexels_videos_2917.mp4") {
         key = "courses/Fifth_module/pexels_videos_2917.mp4";
+        duration = 12;
       } else if (file.originalname === "pexels_videos_2516160.mp4") {
         key = "courses/Third_module/pexels_videos_2516160.mp4";
+        duration = 9;
+      } else {
+        key =
+          "courses/Second module/pexels-nathan-j-hilton-19058370 (240p).mp4";
+        duration = 13;
       }
       // const key = `courses/${name}/${file.originalname}`;
       const params = {
@@ -134,8 +142,8 @@ export class InstructorSerivce implements IInstructorService {
       };
       const filePath = `https://${params.Bucket}.s3.${process.env.AWS_S3_REGION}.amazonaws.com/${params.Key}`;
       // await s3.send(new PutObjectCommand(params));
-      const duration = await getVideoDuration(filePath);
-      const durationHMS = secondsToHMS(duration);
+      // const duration = await getVideoDuration(filePath);
+      const durationHMS = secondsToHMS(duration!);
       const module = {
         name,
         description,

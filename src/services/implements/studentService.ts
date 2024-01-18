@@ -265,10 +265,53 @@ export class StudentService implements IStudentService {
     enrollmentId: string,
     moduleId: string
   ): Promise<IEnrolledCourse> {
-    return await this.enrolledCourseRepository.addModuleToProgression(
+    const response = await this.enrolledCourseRepository.addModuleToProgression(
       enrollmentId,
       moduleId
     );
+    const course = await this.courseRepository.findCourseById(
+      response.courseId!
+    );
+    if (
+      course?.modules?.length === response.progression?.length &&
+      !response.completed
+    ) {
+      console.log("ehoooo");
+
+      const student = await this.studentRepository.findStudentById(
+        response.studentId!
+      );
+      console.log(student, "stu");
+
+      const transporter = nodemailer.createTransport({
+        host: "smtp.gmail.com",
+        port: 587,
+        service: "Gmail",
+        secure: true,
+        auth: {
+          user: process.env.USER_EMAIL,
+          pass: process.env.USER_EMAIL_PASSWORD,
+        },
+      });
+      transporter.sendMail({
+        to: student.email,
+        from: process.env.USER_EMAIL,
+        subject: "EduVista OTP Verification",
+        html: `<div><h1>Course completion certificate from EduVista</h1></div>`,
+        attachments: [
+          {
+            filename: "certificate.jpg",
+            path: __dirname + "/../../../src/files/certificate.jpg",
+          },
+        ],
+      });
+      console.log("hi");
+
+      await this.enrolledCourseRepository.completedStatus(response.id!);
+    }
+    console.log(response);
+
+    return response;
   }
 
   async addNotes(enrolledId: string, notes: string): Promise<IEnrolledCourse> {
