@@ -63,5 +63,5 @@ router.get(
 router.get("/add-progression", isStudentAuth, studentController.addProgression);
 router.post("/add-notes", isStudentAuth, studentController.addNotes);
 router.get("/create-roadmap", studentController.createRoadmap);
-
+router.post("/remove-note", isStudentAuth, studentController.removeNotes);
 export default router;

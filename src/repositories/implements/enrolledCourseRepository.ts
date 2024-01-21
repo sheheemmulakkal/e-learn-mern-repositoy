@@ -175,4 +175,14 @@ export class EnrolledCourseRepository implements IEnrolledCourseRepository {
     }
     await course?.save();
   }
+
+  async removeNotes(data: string, courseId: string): Promise<IEnrolledCourse> {
+    const course = await EnrolledCourse.findById(courseId);
+    if (course && course.notes) {
+      const updatedNotes = course.notes.filter((note) => note !== data);
+      course.notes = updatedNotes;
+      await course.save();
+    }
+    return course as IEnrolledCourse;
+  }
 }

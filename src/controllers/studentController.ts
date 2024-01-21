@@ -425,4 +425,18 @@ export class StudentController {
       }
     }
   }
+
+  async removeNotes(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { data, courseId } = req.body;
+      const course = studentService.removeNotes(data, courseId);
+      res.status(200).json(course);
+    } catch (error) {
+      console.log(error);
+
+      if (error instanceof Error) {
+        next(error);
+      }
+    }
+  }
 }

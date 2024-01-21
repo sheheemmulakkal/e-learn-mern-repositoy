@@ -375,4 +375,8 @@ export class StudentService implements IStudentService {
       sendMail(email);
     });
   }
+
+  async removeNotes(data: string, courseId: string) {
+    return await this.enrolledCourseRepository.removeNotes(data, courseId);
+  }
 }
