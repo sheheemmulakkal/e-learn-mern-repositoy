@@ -273,6 +273,8 @@ export class InstructorController {
       const course = await instructorService.getSingleCourse(courseId);
       res.status(200).json(course);
     } catch (error) {
+      console.log(error);
+
       if (error instanceof Error) {
         next(error);
       }
