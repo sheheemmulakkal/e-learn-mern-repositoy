@@ -263,7 +263,7 @@ export class StudentController {
           { description: { $regex: search as string, $options: "i" } },
         ];
       }
-      if (category) {
+      if (category && category !== "undefined") {
         inputs.category = category as string;
       }
       if (level) {
@@ -272,7 +272,9 @@ export class StudentController {
       if (language) {
         inputs.language = language as string;
       }
+
       const course = await studentService.searchCourse(inputs);
+
       res.status(200).json(course);
     } catch (error) {
       if (error instanceof Error) {
