@@ -138,14 +138,11 @@ export class AdminController {
   async addCategory(req: Request, res: Response, next: NextFunction) {
     try {
       const { category } = req.body;
-      console.log(category);
-
       const upperCaseCategory = category.toUpperCase();
       const newCategory = await adminService.addCategory(upperCaseCategory);
       res.status(201).json({ category: newCategory });
     } catch (error) {
       if (error instanceof Error) {
-        console.log(error.message);
         next(error);
       }
     }
@@ -349,8 +346,6 @@ export class AdminController {
     try {
       const { courseId } = req.params;
       const course = await adminService.getSingleCourse(courseId);
-      console.log(course);
-
       res.status(200).json(course);
     } catch (error) {
       if (error instanceof Error) {

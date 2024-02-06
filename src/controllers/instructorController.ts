@@ -172,8 +172,6 @@ export class InstructorController {
       res.status(200).json(course);
     } catch (error) {
       if (error instanceof Error) {
-        console.log(error.message);
-
         next(error);
       }
     }
@@ -273,8 +271,6 @@ export class InstructorController {
       const course = await instructorService.getSingleCourse(courseId);
       res.status(200).json(course);
     } catch (error) {
-      console.log(error);
-
       if (error instanceof Error) {
         next(error);
       }
@@ -288,8 +284,6 @@ export class InstructorController {
   ) {
     try {
       const { otp, email } = req.body;
-      console.log(otp, email);
-
       const savedOtp = await otpService.findOtp(email);
       if (savedOtp?.otp === otp) {
         res.status(200).json({ success: true });
@@ -339,8 +333,6 @@ export class InstructorController {
       );
       res.status(200).json(module);
     } catch (error) {
-      console.log(error);
-
       if (error instanceof Error) {
         next(error);
       }

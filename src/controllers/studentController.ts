@@ -379,8 +379,6 @@ export class StudentController {
       );
       res.status(200).json(enrolledCourses);
     } catch (error) {
-      console.log(error);
-
       if (error instanceof Error) {
         next(error);
       }
@@ -420,8 +418,6 @@ export class StudentController {
       const roadmap = await studentService.createRoadmap(topic as string);
       res.status(200).json(roadmap);
     } catch (error) {
-      console.log(error);
-
       if (error instanceof Error) {
         next(error);
       }
