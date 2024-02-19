@@ -328,6 +328,7 @@ export class StudentService implements IStudentService {
       ],
       temperature: 0.2,
       max_tokens: 1000,
+      stream: true,
     });
     return response.choices[0].message.content!;
   }
